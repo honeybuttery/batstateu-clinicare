@@ -1,0 +1,60 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="patient-records-page">
+  <div class="patient-page-header mb-4">
+    <div>
+      <p class="patient-page-kicker mb-1">Patient Portal</p>
+      <h1 class="h3 mb-1">Edit Profile</h1>
+      <p class="text-muted mb-0">Update your personal health information</p>
+    </div>
+    <a class="btn btn-outline-secondary" href="{{ url_for('patient.medical_records_page') }}">Back to Medical Records</a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      {% include 'includes/flash_messages.html' %}
+
+      <form method="post" action="{{ url_for('patient.edit_profile_submit') }}" class="patient-profile-form" novalidate>
+        
+        <div class="row">
+          <div class="col-lg-6 mb-4">
+            <label for="full_name" class="form-label">Full Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ patient.full_name or '' }}" placeholder="Enter your full name" required>
+            <small class="text-muted">This will be displayed in your medical records.</small>
+          </div>
+
+          <div class="col-lg-6 mb-4">
+            <label for="contact_number" class="form-label">Contact Number</label>
+            <input type="tel" class="form-control" id="contact_number" name="contact_number" value="{{ patient.contact_number or '' }}" placeholder="e.g., 09123456789">
+            <small class="text-muted">Optional: Help clinic staff reach you</small>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="allergies" class="form-label">Allergies</label>
+          <textarea class="form-control" id="allergies" name="allergies" rows="3" placeholder="e.g., Penicillin, Peanuts, Latex">{{ patient.allergies or '' }}</textarea>
+          <small class="text-muted">List any allergies or adverse reactions. Important for medical safety!</small>
+        </div>
+
+        <div class="mb-4">
+          <label for="known_conditions" class="form-label">Known Medical Conditions</label>
+          <textarea class="form-control" id="known_conditions" name="known_conditions" rows="3" placeholder="e.g., Asthma, Diabetes, Hypertension">{{ patient.known_conditions or '' }}</textarea>
+          <small class="text-muted">List any chronic conditions or ongoing health issues</small>
+        </div>
+
+        <div class="mb-4">
+          <label for="current_medications" class="form-label">Current Medications</label>
+          <textarea class="form-control" id="current_medications" name="current_medications" rows="3" placeholder="e.g., Aspirin 500mg daily, Metformin 1000mg twice daily">{{ patient.current_medications or '' }}</textarea>
+          <small class="text-muted">List medications you're currently taking with dosages</small>
+        </div>
+
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
+          <a href="{{ url_for('patient.medical_records_page') }}" class="btn btn-outline-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

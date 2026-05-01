@@ -1,0 +1,40 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-3">Verify Your Account</h1>
+        <p class="mb-3">
+          Registration is successful. Please check your institutional email for your verification link.
+        </p>
+
+        <form method="post" action="{{ url_for('auth.resend_verification') }}" class="mb-3">
+          <label for="resend_email" class="form-label">Institutional Email</label>
+          <div class="row g-2 align-items-center">
+            <div class="col-12 col-md-8">
+              <input
+                type="email"
+                class="form-control"
+                id="resend_email"
+                name="institutional_email"
+                value="{{ pending_email or '' }}"
+                placeholder="Enter your institutional email"
+                required
+              >
+            </div>
+            <div class="col-12 col-md-auto d-grid">
+              <button type="submit" class="btn btn-outline-primary">Resend verification link</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="alert alert-info mb-0">
+          If you do not receive an email, contact the clinic system administrator to activate your account.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

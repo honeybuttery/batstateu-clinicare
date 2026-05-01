@@ -1,0 +1,38 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Consultation Form - Visit #{{ visit.visit_id }}</h1>
+  <a class="btn btn-outline-secondary" href="{{ url_for('physician.visit_detail_page', visit_id=visit.visit_id) }}">Back to Visit</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post" action="{{ url_for('physician.consultation_form_submit', visit_id=visit.visit_id) }}" class="row g-3">
+      <div class="col-12">
+        <label class="form-label" for="history">History</label>
+        <textarea class="form-control" id="history" name="history" rows="3">{{ consultation.history if consultation else '' }}</textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="physical_exam">Physical Exam</label>
+        <textarea class="form-control" id="physical_exam" name="physical_exam" rows="3">{{ consultation.physical_exam if consultation else '' }}</textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="assessment">Assessment</label>
+        <textarea class="form-control" id="assessment" name="assessment" rows="3">{{ consultation.assessment if consultation else '' }}</textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="plan">Plan</label>
+        <textarea class="form-control" id="plan" name="plan" rows="3">{{ consultation.plan if consultation else '' }}</textarea>
+      </div>
+      <div class="col-12">
+        <label class="form-label" for="follow_up_instructions">Follow-up Instructions</label>
+        <textarea class="form-control" id="follow_up_instructions" name="follow_up_instructions" rows="2">{{ consultation.follow_up_instructions if consultation else '' }}</textarea>
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Save Consultation</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

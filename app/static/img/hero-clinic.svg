@@ -1,0 +1,60 @@
+<svg width="900" height="620" viewBox="0 0 900 620" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Clinic dashboard and doctor illustration">
+  <defs>
+    <linearGradient id="bgPanel" x1="110" y1="90" x2="810" y2="540" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F9"/>
+      <stop offset="1" stop-color="#FEECEF"/>
+    </linearGradient>
+    <linearGradient id="dashboard" x1="220" y1="170" x2="690" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FDEDEF"/>
+    </linearGradient>
+    <linearGradient id="coat" x1="645" y1="220" x2="760" y2="500" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F2F2F2"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="18" y="18" width="864" height="584" rx="32" fill="url(#bgPanel)"/>
+  <circle cx="730" cy="118" r="76" fill="#F8D9DE"/>
+  <circle cx="146" cy="146" r="58" fill="#FBE7EA"/>
+  <circle cx="134" cy="492" r="64" fill="#FAE3E8"/>
+
+  <rect x="180" y="148" width="520" height="310" rx="24" fill="url(#dashboard)" stroke="#F2D8DE" stroke-width="3"/>
+  <rect x="218" y="188" width="230" height="22" rx="11" fill="#F6DCE1"/>
+  <rect x="460" y="188" width="200" height="22" rx="11" fill="#F6DCE1"/>
+
+  <rect x="220" y="236" width="180" height="180" rx="18" fill="#FFF" stroke="#F1D8DD"/>
+  <rect x="430" y="236" width="230" height="82" rx="16" fill="#FFF" stroke="#F1D8DD"/>
+  <rect x="430" y="334" width="230" height="82" rx="16" fill="#FFF" stroke="#F1D8DD"/>
+
+  <rect x="272" y="272" width="72" height="16" rx="8" fill="#D58590"/>
+  <rect x="298" y="246" width="20" height="68" rx="10" fill="#D58590"/>
+  <circle cx="545" cy="276" r="22" fill="#F8E4E8"/>
+  <path d="M545 262V290M531 276H559" stroke="#A73A4B" stroke-width="6" stroke-linecap="round"/>
+  <rect x="484" y="351" width="116" height="15" rx="7.5" fill="#EEC2CA"/>
+  <rect x="484" y="374" width="160" height="15" rx="7.5" fill="#F5D7DD"/>
+
+  <circle cx="720" cy="196" r="44" fill="#F2C0C9"/>
+  <circle cx="720" cy="188" r="30" fill="#FFD8BE"/>
+  <path d="M698 188C703 170 713 164 720 164C732 164 741 176 742 188C736 188 729 190 719 190C710 190 703 188 698 188Z" fill="#5D2231"/>
+
+  <path d="M655 286C655 253 679 226 712 223L727 222C766 220 798 251 798 290V470H655V286Z" fill="url(#coat)" stroke="#D8D8D8" stroke-width="2"/>
+  <path d="M724 237L745 270L724 286L703 270L724 237Z" fill="#A53A4C"/>
+  <rect x="710" y="292" width="28" height="178" rx="14" fill="#A53A4C"/>
+  <rect x="660" y="338" width="46" height="122" rx="22" fill="#FFF" stroke="#D9D9D9"/>
+  <rect x="742" y="338" width="46" height="122" rx="22" fill="#FFF" stroke="#D9D9D9"/>
+
+  <rect x="768" y="314" width="52" height="148" rx="24" transform="rotate(6 768 314)" fill="#FFD8BE"/>
+  <rect x="792" y="400" width="76" height="56" rx="8" transform="rotate(6 792 400)" fill="#FFF" stroke="#E6D6D9"/>
+
+  <rect x="108" y="244" width="62" height="62" rx="16" fill="#FFF" stroke="#F0D3D9"/>
+  <path d="M139 260V290M124 275H154" stroke="#A53A4C" stroke-width="7" stroke-linecap="round"/>
+
+  <rect x="90" y="392" width="62" height="62" rx="16" fill="#FFF" stroke="#F0D3D9"/>
+  <path d="M121 408V438M106 423H136" stroke="#A53A4C" stroke-width="7" stroke-linecap="round"/>
+
+  <rect x="212" y="492" width="74" height="74" rx="16" fill="#FFF" stroke="#F0D3D9"/>
+  <path d="M249 512V548M231 530H267" stroke="#A53A4C" stroke-width="8" stroke-linecap="round"/>
+
+  <rect x="704" y="484" width="118" height="30" rx="15" fill="#F0CBD2"/>
+</svg>

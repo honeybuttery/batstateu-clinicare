@@ -1,0 +1,108 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="mb-3">
+  <h1 class="h4 mb-1 role-page-title role-page-title-admin">Audit Logs</h1>
+  <p class="text-muted role-page-description mb-3">Review system activity and user actions.</p>
+
+  <form method="get" class="row g-2 align-items-end" novalidate>
+    <div class="col-12">
+      <div class="p-3 rounded-3" style="background-color:#fff0f2;">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-3">
+            <label class="form-label text-danger small">Showing</label>
+            <select name="showing" class="form-select form-select-sm rounded">
+              <option value="all" {% if filters.showing == 'all' or not filters.showing %}selected{% endif %}>All audit logs</option>
+              <option value="login_activity" {% if filters.showing == 'login_activity' %}selected{% endif %}>Login activity</option>
+              <option value="user_changes" {% if filters.showing == 'user_changes' %}selected{% endif %}>User changes</option>
+              <option value="lookup_changes" {% if filters.showing == 'lookup_changes' %}selected{% endif %}>Lookup changes</option>
+              <option value="configuration_changes" {% if filters.showing == 'configuration_changes' %}selected{% endif %}>Configuration changes</option>
+              <option value="failed_actions" {% if filters.showing == 'failed_actions' %}selected{% endif %}>Failed actions / errors</option>
+              <option value="my_activity" {% if filters.showing == 'my_activity' %}selected{% endif %}>My activity</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label text-danger small">Date</label>
+            <select name="date" class="form-select form-select-sm rounded">
+              <option value="today" {% if filters.date == 'today' %}selected{% endif %}>Today</option>
+              <option value="last_7_days" {% if filters.date == 'last_7_days' %}selected{% endif %}>Last 7 days</option>
+              <option value="last_30_days" {% if filters.date == 'last_30_days' or not filters.date %}selected{% endif %}>Last 30 days</option>
+              <option value="custom" {% if filters.date == 'custom' %}selected{% endif %}>Custom range</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label text-danger small">Action</label>
+            <select name="action" class="form-select form-select-sm rounded">
+              <option value="all" {% if filters.action == 'all' or not filters.action %}selected{% endif %}>All actions</option>
+              <option value="login" {% if filters.action == 'login' %}selected{% endif %}>Login</option>
+              <option value="create" {% if filters.action == 'create' %}selected{% endif %}>Create</option>
+              <option value="update" {% if filters.action == 'update' %}selected{% endif %}>Update</option>
+              <option value="delete" {% if filters.action == 'delete' %}selected{% endif %}>Delete</option>
+              <option value="failed_login" {% if filters.action == 'failed_login' %}selected{% endif %}>Failed login</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label text-danger small">Entity</label>
+            <select name="entity" class="form-select form-select-sm rounded">
+              <option value="all" {% if filters.entity == 'all' or not filters.entity %}selected{% endif %}>All entities</option>
+              <option value="users" {% if filters.entity == 'users' %}selected{% endif %}>Users</option>
+              <option value="sessions" {% if filters.entity == 'sessions' %}selected{% endif %}>Sessions</option>
+              <option value="lookups" {% if filters.entity == 'lookups' %}selected{% endif %}>Lookups</option>
+              <option value="configuration" {% if filters.entity == 'configuration' %}selected{% endif %}>Configuration</option>
+              <option value="appointments" {% if filters.entity == 'appointments' %}selected{% endif %}>Appointments</option>
+              <option value="consultations" {% if filters.entity == 'consultations' %}selected{% endif %}>Consultations</option>
+              <option value="reports" {% if filters.entity == 'reports' %}selected{% endif %}>Reports</option>
+            </select>
+          </div>
+
+          <div class="col-12 text-end mt-2">
+            <button type="submit" class="btn btn-sm btn-danger">Apply filters</button>
+            <a href="{{ url_for('system_admin.audit_logs_page') }}" class="btn btn-sm btn-outline-secondary ms-2">Reset</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  </div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    {% if logs %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>When</th>
+              {% if scope == 'full' %}<th>User</th>{% endif %}
+              <th>Action</th>
+              <th>Entity</th>
+              <th>Description</th>
+              {% if scope == 'full' %}<th>IP</th>{% endif %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in logs %}
+              <tr>
+                <td>{{ log.performed_at }}</td>
+                {% if scope == 'full' %}<td>{{ log.institutional_email }}</td>{% endif %}
+                <td>
+                  {% set action_label = log.action_type|display_label %}
+                  <span class="audit-action-badge">{{ action_label }}</span>
+                </td>
+                <td>{{ log.entity_type|display_label }}</td>
+                <td>{{ log.description or '-' }}</td>
+                {% if scope == 'full' %}<td>{{ log.ip_address or '-' }}</td>{% endif %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-4 text-muted">No audit logs found.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

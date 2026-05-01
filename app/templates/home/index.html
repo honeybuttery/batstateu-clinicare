@@ -1,0 +1,182 @@
+{% set landing_page = true %}
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<section id="home" class="clinic-hero-section">
+	<div class="container py-5 py-lg-6 clinic-hero-content">
+		<div class="row align-items-center g-4 g-lg-5">
+			<div class="col-lg-6">
+				<p class="clinic-overline mb-2">Campus Health Portal</p>
+				<h1 class="clinic-hero-title">BatStateU CliniCare</h1>
+				<h2 class="clinic-hero-subtitle">Where Campus Health Meets Convenience</h2>
+				<p class="clinic-hero-copy">
+					A web-based university clinic portal for appointment requests, electronic clinic records,
+					emergency and walk-in handling, and coordinated clinical workflows.
+				</p>
+				<div class="d-flex flex-wrap gap-3 pt-2">
+					<a class="btn btn-clinic btn-clinic-solid btn-lg" href="{{ url_for('auth.login_page') }}">Login</a>
+					<a class="btn btn-clinic btn-clinic-outline btn-lg" href="{{ url_for('auth.register_page') }}">Register</a>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="clinic-hero-carousel-panel">
+					<div id="clinicHeroCarousel" class="carousel slide clinic-hero-carousel" data-bs-ride="carousel" data-bs-interval="4600">
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+								<article class="clinic-hero-slide clinic-hero-slide-one">
+									<img src="{{ url_for('static', filename='img/hero-slide-1.png') }}" alt="Modern healthcare systems" class="clinic-hero-slide-image">
+									<div class="clinic-hero-slide-overlay" aria-hidden="true"></div>
+									<div class="clinic-hero-slide-copy">
+										<h3>Modern Healthcare</h3>
+										<p>Advanced medical facilities</p>
+									</div>
+								</article>
+							</div>
+							<div class="carousel-item">
+								<article class="clinic-hero-slide clinic-hero-slide-two">
+									<img src="{{ url_for('static', filename='img/hero-slide-2.png') }}" alt="Efficient appointment scheduling" class="clinic-hero-slide-image">
+									<div class="clinic-hero-slide-overlay" aria-hidden="true"></div>
+									<div class="clinic-hero-slide-copy">
+										<h3>Smart Appointments</h3>
+										<p>Faster online queueing and booking</p> 
+									</div>
+								</article>
+							</div>
+							<div class="carousel-item">
+								<article class="clinic-hero-slide clinic-hero-slide-three">
+									<img src="{{ url_for('static', filename='img/hero-slide-3.png') }}" alt="Secure electronic clinic records" class="clinic-hero-slide-image">
+									<div class="clinic-hero-slide-overlay" aria-hidden="true"></div>
+									<div class="clinic-hero-slide-copy">
+										<h3>Safer Health Records</h3>
+										<p>Secure and centralized clinic data</p>
+									</div>
+								</article>
+							</div>
+						</div>
+						<div class="carousel-indicators clinic-hero-indicators">
+							<button type="button" data-bs-target="#clinicHeroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+							<button type="button" data-bs-target="#clinicHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+							<button type="button" data-bs-target="#clinicHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center pt-4 pt-lg-5 clinic-scroll-wrap">
+			<a class="clinic-scroll-indicator" href="#services" data-scroll-target="#services" aria-label="Scroll down to key features">
+				<i class="bi bi-chevron-double-down"></i>
+			</a>
+		</div>
+	</div>
+</section>
+
+<section id="services" class="clinic-features-section py-5">
+	<div class="container">
+		<h2 class="clinic-section-title text-center mb-1">What We Offer</h2>
+		<p class="clinic-section-subtitle text-center mb-4">Clinic System Services</p>
+		<p class="clinic-section-helper text-center mx-auto mb-4">Designed to streamline appointments, electronic clinic records, emergency triage, and coordinated care for the BatStateU community.</p>
+		<div class="row g-4">
+			<div class="col-sm-6 col-lg-3">
+				<article class="clinic-feature-card h-100" tabindex="0">
+					<div class="clinic-feature-icon"><i class="bi bi-clipboard2-pulse"></i></div>
+					<h3>Electronic Clinic Records</h3>
+					<p>Manage patient records securely and efficiently for continuity of care.</p>
+				</article>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<article class="clinic-feature-card h-100" tabindex="0">
+					<div class="clinic-feature-icon"><i class="bi bi-calendar2-check"></i></div>
+					<h3>Appointment Scheduling</h3>
+					<p>Coordinate booking, approvals, and schedules with a simple workflow.</p>
+				</article>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<article class="clinic-feature-card h-100" tabindex="0">
+					<div class="clinic-feature-icon"><i class="bi bi-exclamation-triangle"></i></div>
+					<h3>Emergency &amp; Walk-in Handling</h3>
+					<p>Prioritize urgent and unscheduled visits with clearer triage handling.</p>
+				</article>
+			</div>
+			<div class="col-sm-6 col-lg-3">
+				<article class="clinic-feature-card h-100" tabindex="0">
+					<div class="clinic-feature-icon"><i class="bi bi-capsule-pill"></i></div>
+					<h3>Care Coordination</h3>
+					<p>Keep visits, consults, and follow-ups aligned in one place.</p>
+				</article>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="about" class="clinic-info-section py-5">
+	<div class="container">
+		<div class="row g-4 g-xl-5">
+			<div class="col-lg-6">
+				<div class="clinic-info-card h-100">
+					<h2 class="clinic-info-title">Why Choose CliniCare?</h2>
+					<ul class="clinic-list">
+						<li><i class="bi bi-check-circle-fill"></i> Centralized clinic records</li>
+						<li><i class="bi bi-check-circle-fill"></i> Faster appointment handling</li>
+						<li><i class="bi bi-check-circle-fill"></i> Better emergency prioritization</li>
+						<li><i class="bi bi-check-circle-fill"></i> Consistent care coordination</li>
+					</ul>
+
+					<div id="contact" class="pt-3 mt-3 border-top">
+						<h3 class="clinic-contact-title">Contact the BatStateU Clinic</h3>
+						<p class="mb-2"><i class="bi bi-envelope"></i> batstateuclinicare.lipa@gmail.com</p>
+						<p class="mb-2"><i class="bi bi-geo-alt"></i> BatStateU | A. Tanco Drive, Marawoy, Lipa City, Batangas</p>
+						<p class="mb-2"><i class="bi bi-clock"></i> Mon - Fri | 8:00 AM - 5:00 PM</p>
+						<p class="mb-0"><i class="bi bi-telephone"></i> (+63) 123-456-7890</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-lg-6">
+				<div class="clinic-info-card h-100">
+					<h2 class="clinic-info-title">About BatStateU CliniCare</h2>
+					<p class="text-muted mb-3">Serving students, faculty, and staff of Batangas State University.</p>
+					<div class="row g-3">
+						<div class="col-6 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-mortarboard"></i><span>Students</span></div>
+						</div>
+						<div class="col-6 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-person-workspace"></i><span>Faculty</span></div>
+						</div>
+						<div class="col-6 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-people"></i><span>Staff</span></div>
+						</div>
+						<div class="col-6 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-heart-pulse"></i><span>Clinic Nurse</span></div>
+						</div>
+						<div class="col-6 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-person-badge"></i><span>Physician</span></div>
+						</div>
+						<div class="col-6 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-kanban"></i><span>Clinic Admin</span></div>
+						</div>
+						<div class="col-12 col-md-4">
+							<div class="clinic-role-chip"><i class="bi bi-shield-check"></i><span>Administrator</span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<footer class="clinic-footer-section py-4">
+	<div class="container d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+		<div>
+			<h2 class="clinic-footer-brand mb-1">BatStateU CliniCare</h2>
+			<p class="mb-1">Batangas State University - Lipa Campus</p>
+			<p class="mb-0 clinic-footer-tagline">Streamlining clinic appointments, electronic clinic records, and coordinated care workflows.</p>
+		</div>
+		<div class="d-flex gap-2">
+			<a href="#" class="clinic-social-link" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+			<a href="#" class="clinic-social-link" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+			<a href="#" class="clinic-social-link" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+		</div>
+	</div>
+</footer>
+{% endblock %}

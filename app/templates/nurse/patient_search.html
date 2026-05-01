@@ -1,0 +1,95 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 mb-1 role-page-title role-page-title-admin">Patient Search</h1>
+    <p class="text-muted role-page-description mb-0">Find existing patient profiles or register a new patient for walk-in and emergency care.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('nurse.walkin_emergency_register_page') }}">Walk-In / Emergency Registration</a>
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body">
+    <form method="get" action="{{ url_for('nurse.patient_search_page') }}" class="row g-2">
+      <div class="col-md-10">
+        <input class="form-control" type="text" name="q" value="{{ keyword }}" placeholder="Search by name, email, or contact number">
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-3">
+  <div class="card-body p-0">
+    {% if keyword %}
+      {% if patients %}
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Patient</th>
+                <th>Category</th>
+                <th>Contact</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in patients %}
+                <tr>
+                  <td>
+                    <div>{{ p.full_name }}</div>
+                    <small class="text-muted">{{ p.institutional_email }}</small>
+                  </td>
+                  <td>{{ p.patient_category }}</td>
+                  <td>{{ p.contact_number or '-' }}</td>
+                  <td class="text-end">
+                    <a class="btn btn-sm btn-primary" href="{{ url_for('nurse.walkin_emergency_register_page', patient_profile_id=p.patient_profile_id) }}">Select</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="p-3 text-muted">No patient found. You can register below.</div>
+      {% endif %}
+    {% else %}
+      <div class="p-3 text-muted">Search first to select an existing patient.</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card border-primary">
+  <div class="card-body">
+    <h2 class="h6">Register New Patient Profile (Walk-In/Emergency)</h2>
+    <form method="post" action="{{ url_for('nurse.patient_register_submit') }}" class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label" for="patient_category">Category</label>
+        <select class="form-select" id="patient_category" name="patient_category" required>
+          <option value="student">Student</option>
+          <option value="faculty">Faculty</option>
+          <option value="staff">Staff</option>
+        </select>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label" for="full_name">Full Name</label>
+        <input class="form-control" id="full_name" name="full_name" required>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label" for="institutional_email">Institutional Email</label>
+        <input class="form-control" type="email" id="institutional_email" name="institutional_email" required>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" for="contact_number">Contact Number</label>
+        <input class="form-control" id="contact_number" name="contact_number">
+      </div>
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Register Patient</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <p class="role-page-kicker mb-1">PHYSICIAN PORTAL</p>
+    <h1 class="h4 mb-1 role-page-title role-page-title-admin">Physician Queue</h1>
+    <p class="text-muted role-page-description mb-0">Review assigned patient visits and open records for consultation and treatment planning.</p>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    {% if queue %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Priority</th>
+              
+              <th>Patient</th>
+              <th>Arrival</th>
+              <th>Type</th>
+              <th>Triage</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in queue %}
+              {% set is_emergency = 'emerg' in (item.consultation_type_code or '')|lower or 'emerg' in (item.consultation_type_name or '')|lower %}
+              <tr class="{% if is_emergency %}table-danger{% endif %}">
+                <td>
+                  {% if is_emergency %}
+                    <span class="badge text-bg-danger">Emergency</span>
+                  {% else %}
+                    <span class="badge text-bg-secondary">Routine</span>
+                  {% endif %}
+                </td>
+                
+                <td>
+                  <div>{{ item.patient_name }}</div>
+                  <small class="text-muted">{{ item.patient_email }}</small>
+                </td>
+                <td>{{ item.arrival_time }}</td>
+                <td>{{ item.consultation_type_name }}</td>
+                <td>{{ item.triage_level_name or '-' }}</td>
+                <td><span class="badge text-bg-info">{{ item.visit_status }}</span></td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-primary" href="{{ url_for('physician.visit_detail_page', visit_id=item.visit_id) }}">Open</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-4 text-muted">No visits in your queue.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

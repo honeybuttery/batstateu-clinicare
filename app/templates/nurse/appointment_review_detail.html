@@ -1,0 +1,91 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Review Appointment #{{ appointment.appointment_id }}</h1>
+  <a class="btn btn-outline-secondary" href="{{ url_for('nurse.appointments_review') }}">Back to Review List</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6">Appointment Details</h2>
+        <p class="mb-1"><strong>Status:</strong> <span class="badge text-bg-secondary">{{ appointment.status }}</span></p>
+        <p class="mb-1"><strong>Patient:</strong> {{ appointment.patient_name }} ({{ appointment.patient_email }})</p>
+        <p class="mb-1"><strong>Physician:</strong> {{ appointment.physician_email }}</p>
+        <p class="mb-1"><strong>Type:</strong> {{ appointment.consultation_type_name }}</p>
+        <p class="mb-1"><strong>Preferred Date:</strong> {{ appointment.scheduled_date or '-' }}</p>
+        <p class="mb-1"><strong>Preferred Time:</strong> {{ appointment.scheduled_time or '-' }}</p>
+        <p class="mb-0"><strong>Reason:</strong> {{ appointment.reason or '-' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h6">Approve or Adjust</h2>
+        <form method="post" action="{{ url_for('nurse.appointment_review_submit', appointment_id=appointment.appointment_id) }}">
+          <input type="hidden" name="decision" value="approve">
+
+          <div class="mb-3">
+            <label class="form-label" for="physician_user_id">Physician</label>
+            <select class="form-select" id="physician_user_id" name="physician_user_id" required>
+              <option value="">Select physician</option>
+              {% for physician in physicians %}
+                <option value="{{ physician.user_id }}" {% if physician.user_id == appointment.physician_user_id %}selected{% endif %}>{{ physician.institutional_email }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="scheduled_date">Scheduled Date</label>
+              <input class="form-control" type="date" id="scheduled_date" name="scheduled_date" value="{{ appointment.scheduled_date or '' }}" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="scheduled_time">Scheduled Time</label>
+              <input class="form-control" type="time" id="scheduled_time" name="scheduled_time" value="{{ appointment.scheduled_time or '' }}" required>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="submit">Approve / Save Adjustments</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="card border-danger">
+      <div class="card-body">
+        <h2 class="h6 text-danger">Decline Request</h2>
+        <form method="post" action="{{ url_for('nurse.appointment_review_submit', appointment_id=appointment.appointment_id) }}">
+          <input type="hidden" name="decision" value="decline">
+          <button class="btn btn-outline-danger" type="submit">Decline (Cancel Appointment)</button>
+        </form>
+      </div>
+    </div>
+
+    {% if appointment.status == 'approved' %}
+      <div class="card shadow-sm mt-3">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <span class="small">This appointment is approved and ready for check-in.</span>
+          <a class="btn btn-success" href="{{ url_for('nurse.check_in_page', appointment_id=appointment.appointment_id) }}">Go to Check-In</a>
+        </div>
+      </div>
+    {% elif appointment.status == 'checked_in' %}
+      <div class="card shadow-sm mt-3">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <span class="small">Appointment is checked in.</span>
+          {% if appointment.linked_visit_id %}
+            <span class="badge text-bg-success">Visit #{{ appointment.linked_visit_id }} already linked</span>
+          {% else %}
+            <form method="post" action="{{ url_for('nurse.create_visit_submit', appointment_id=appointment.appointment_id) }}">
+              <button class="btn btn-primary" type="submit">Create Linked Visit</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

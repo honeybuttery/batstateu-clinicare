@@ -1,0 +1,68 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Visit #{{ visit.visit_id }}</h1>
+  <a class="btn btn-outline-secondary" href="{{ url_for('physician.queue_page') }}">Back to Queue</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6">Patient</h2>
+        <p class="mb-1"><strong>Name:</strong> {{ visit.patient_name }}</p>
+        <p class="mb-1"><strong>Email:</strong> {{ visit.patient_email }}</p>
+        <p class="mb-1"><strong>Category:</strong> {{ visit.patient_category }}</p>
+        <p class="mb-1"><strong>Contact:</strong> {{ visit.contact_number or '-' }}</p>
+        <p class="mb-1"><strong>Allergies:</strong> {{ visit.allergies or '-' }}</p>
+        <p class="mb-1"><strong>Known Conditions:</strong> {{ visit.known_conditions or '-' }}</p>
+        <p class="mb-0"><strong>Current Medications:</strong> {{ visit.current_medications or '-' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h6">Visit + Triage</h2>
+        <p class="mb-1"><strong>Type:</strong> {{ visit.consultation_type_name }}</p>
+        <p class="mb-1"><strong>Arrival:</strong> {{ visit.arrival_time }}</p>
+        <p class="mb-1"><strong>Status:</strong> <span class="badge text-bg-info">{{ visit.visit_status }}</span></p>
+        <p class="mb-1"><strong>Triage Level:</strong> {{ visit.triage_level_name or '-' }}</p>
+        <hr>
+        <p class="mb-1"><strong>BP:</strong> {{ visit.bp or '-' }}</p>
+        <p class="mb-1"><strong>Heart Rate:</strong> {{ visit.heart_rate or '-' }}</p>
+        <p class="mb-1"><strong>Respiratory Rate:</strong> {{ visit.respiratory_rate or '-' }}</p>
+        <p class="mb-1"><strong>Temperature:</strong> {{ visit.temperature or '-' }}</p>
+        <p class="mb-1"><strong>O2 Sat:</strong> {{ visit.oxygen_saturation or '-' }}</p>
+        <p class="mb-1"><strong>Weight:</strong> {{ visit.weight or '-' }}</p>
+        <p class="mb-1"><strong>Initial Assessment:</strong> {{ visit.initial_assessment or '-' }}</p>
+        <p class="mb-1"><strong>Immediate Action:</strong> {{ visit.immediate_action or '-' }}</p>
+        <p class="mb-1"><strong>Referral:</strong> {{ visit.referral_details or '-' }}</p>
+        <p class="mb-0"><strong>Triage Notes:</strong> {{ visit.triage_notes or '-' }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm mt-3">
+  <div class="card-body d-flex flex-wrap gap-2">
+    <a class="btn btn-primary" href="{{ url_for('physician.consultation_form_page', visit_id=visit.visit_id) }}">Consultation Form</a>
+    <a class="btn btn-outline-secondary" href="{{ url_for('physician.patient_history_page', patient_profile_id=visit.patient_profile_id) }}">Patient History</a>
+  </div>
+</div>
+
+{% if consultation %}
+  <div class="card shadow-sm mt-3">
+    <div class="card-body">
+      <h2 class="h6">Latest Consultation Entry</h2>
+      <p class="mb-1"><strong>History:</strong> {{ consultation.history or '-' }}</p>
+      <p class="mb-1"><strong>Physical Exam:</strong> {{ consultation.physical_exam or '-' }}</p>
+      <p class="mb-1"><strong>Assessment:</strong> {{ consultation.assessment or '-' }}</p>
+      <p class="mb-1"><strong>Plan:</strong> {{ consultation.plan or '-' }}</p>
+      <p class="mb-0"><strong>Follow-up:</strong> {{ consultation.follow_up_instructions or '-' }}</p>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

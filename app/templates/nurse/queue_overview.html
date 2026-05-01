@@ -1,0 +1,44 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Queue Overview</h1>
+  <a class="btn btn-outline-primary" href="{{ url_for('nurse.appointments_review') }}">Back to Appointment Review</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    {% if queue %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Patient</th>
+              <th>Arrival Time</th>
+              <th>Physician</th>
+              <th>Type</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in queue %}
+              <tr>
+                <td>
+                  <div>{{ item.patient_name }}</div>
+                  <small class="text-muted">{{ item.patient_email }}</small>
+                </td>
+                <td>{{ item.arrival_time }}</td>
+                <td>{{ item.physician_email }}</td>
+                <td>{{ item.consultation_type_name }}</td>
+                <td><span class="badge text-bg-info">{{ item.visit_status }}</span></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="p-4 text-muted">Queue is currently empty.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

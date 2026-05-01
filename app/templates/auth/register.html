@@ -1,0 +1,126 @@
+{% set hide_topbar = true %}
+{% set body_class = 'auth-login-body' %}
+{% set suppress_global_flash = true %}
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="auth-login-wrap">
+  <section class="auth-login-shell" aria-label="Registration panel">
+    <div class="auth-login-visual">
+      <div class="auth-login-brand-block">
+        <div class="auth-login-brand">
+          <img src="{{ url_for('static', filename='img/batstateu-logo.png', v='20260418') }}" alt="Batangas State University logo" class="auth-login-brand-logo">
+          <div class="auth-login-brand-copy">
+            <h2>BatStateU CliniCare</h2>
+          </div>
+        </div>
+        <p class="auth-login-tagline">A smarter and more secure campus healthcare experience.</p>
+
+        <div class="auth-login-pill-group" aria-label="Platform highlights">
+          <span class="auth-login-pill"><i class="bi bi-shield-lock-fill" aria-hidden="true"></i> Secure Access</span>
+          <span class="auth-login-pill"><i class="bi bi-calendar2-check-fill" aria-hidden="true"></i> Faster Appointments</span>
+        </div>
+
+        <p class="auth-login-campus mb-0"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Batangas State University - Lipa Campus</p>
+      </div>
+    </div>
+
+    <div class="auth-login-form-pane">
+      <a class="auth-login-home-link" href="{{ url_for('patient.home') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+      <h1>Create Account</h1>
+      <p class="auth-login-subtitle">Use your BatStateU institutional email to register</p>
+
+      <div class="auth-login-alerts">
+        {% include 'includes/flash_messages.html' %}
+      </div>
+
+      {% if pending_email %}
+      <div class="alert alert-info" role="status">
+        <div class="fw-semibold mb-1">Verify Your Account</div>
+        <div class="small mb-3">Registration is successful. Please check your institutional email for your verification code.</div>
+
+        <form method="post" action="{{ url_for('auth.verify_otp') }}" class="d-grid gap-2">
+          <label for="otp_code" class="form-label mb-2">Enter Verification Code</label>
+          <input
+            type="text"
+            class="form-control form-control-lg text-center"
+            id="otp_code"
+            name="otp_code"
+            placeholder="000000"
+            inputmode="numeric"
+            maxlength="6"
+            autocomplete="off"
+            required
+            style="letter-spacing: 0.5rem; font-size: 1.5rem; font-weight: 600;"
+          >
+          <button type="submit" class="btn btn-primary">Verify Account</button>
+        </form>
+
+        <div class="text-center mt-3">
+          <p class="small text-muted mb-2">Didn't receive the code?</p>
+          <form method="post" action="{{ url_for('auth.resend_verification') }}" class="d-inline">
+            <input type="hidden" name="institutional_email" value="{{ pending_email }}">
+            <button type="submit" id="resend_btn" class="btn btn-link btn-sm" data-cooldown="60">Resend code</button>
+          </form>
+        </div>
+
+        <div class="text-center mt-4 pt-3 border-top">
+          <p class="small text-muted mb-2">Registered with the wrong email?</p>
+          <a href="{{ url_for('auth.use_different_email') }}" class="btn btn-outline-secondary btn-sm">Use different email</a>
+        </div>
+      </div>
+      {% else %}
+      <form method="post" action="{{ url_for('auth.register') }}" class="auth-login-form" novalidate>
+        <div class="mb-3">
+          <label for="institutional_email" class="form-label">Email Address</label>
+          <div class="auth-input-group">
+            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+            <input type="email" class="form-control" id="institutional_email" name="institutional_email" placeholder="Enter your email address" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="full_name" class="form-label">Full Name</label>
+          <div class="auth-input-group">
+            <i class="bi bi-person-fill" aria-hidden="true"></i>
+            <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter your full name" autocomplete="name" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="auth-input-group">
+            <i class="bi bi-lock-fill" aria-hidden="true"></i>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" autocomplete="new-password" required>
+            <button class="auth-eye-toggle js-toggle-password" type="button" aria-label="Show password" data-target-input="password">
+              <i class="bi bi-eye-fill" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="confirm_password" class="form-label">Confirm Password</label>
+          <div class="auth-input-group">
+            <i class="bi bi-lock-fill" aria-hidden="true"></i>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-enter your password" autocomplete="new-password" required>
+            <button class="auth-eye-toggle js-toggle-password" type="button" aria-label="Show password" data-target-input="confirm_password">
+              <i class="bi bi-eye-fill" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 auth-login-submit">Create Account</button>
+      </form>
+
+      <div class="auth-login-links">
+        <a href="{{ url_for('auth.login_page') }}">Already have an account? Login</a>
+      </div>
+
+      <p class="auth-login-help mb-0">Need help? Contact support</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <p class="auth-login-copyright mb-0">&copy; {{ current_year or 2026 }} Batangas State University. All rights reserved.</p>
+</div>
+{% endblock %}

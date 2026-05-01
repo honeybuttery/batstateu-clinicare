@@ -1,0 +1,85 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="patient-appt-page patient-records-page">
+  <div class="patient-page-header mb-3 mb-lg-4">
+    <div>
+      <p class="patient-page-kicker role-page-kicker mb-1">Patient Portal</p>
+      <h1 class="h2 mb-1 role-page-title role-page-title-patient">My Medical Records</h1>
+      <p class="text-muted role-page-description mb-0">Review your visit history, consultation notes, and medication records.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary" href="{{ url_for('patient.edit_profile_page') }}"><i class="bi bi-pencil"></i> Edit Profile</a>
+      <a class="btn btn-outline-secondary" href="{{ url_for('patient.appointments_list') }}">Back to Appointments</a>
+    </div>
+  </div>
+
+  {% if patient %}
+    <div class="card shadow-sm mb-3 patient-profile-card">
+      <div class="card-body">
+        <div class="row g-3 patient-profile-grid">
+          <div class="col-md-4"><strong>Name:</strong> {{ patient.full_name or '-' }}</div>
+          <div class="col-md-4"><strong>Category:</strong> {{ patient.patient_category or '-' }}</div>
+          <div class="col-md-4"><strong>Email:</strong> {{ patient.institutional_email or '-' }}</div>
+          <div class="col-md-4"><strong>Contact:</strong> {{ patient.contact_number or '-' }}</div>
+          <div class="col-md-4"><strong>Allergies:</strong> {{ patient.allergies or '-' }}</div>
+          <div class="col-md-4"><strong>Conditions:</strong> {{ patient.known_conditions or '-' }}</div>
+          <div class="col-12"><strong>Current Medications:</strong> {{ patient.current_medications or '-' }}</div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="card shadow-sm mb-3">
+      <div class="card-body patient-empty-state p-4 text-center">
+        <div class="patient-empty-icon mb-2"><i class="bi bi-person-x"></i></div>
+        <h2 class="h5 mb-2">Profile Data Not Available Yet</h2>
+        <p class="text-muted mb-0 patient-empty-copy">Your patient profile details are not yet available. Please contact the clinic if this issue persists.</p>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      {% if records %}
+        <div class="accordion" id="recordsAccordion">
+          {% for rec in records %}
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="recordHeading{{ rec.consultation_id }}">
+                <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#recordCollapse{{ rec.consultation_id }}" aria-expanded="{{ 'true' if loop.first else 'false' }}">
+                  {{ rec.arrival_time or '-' }} - {{ rec.consultation_type_name or 'Consultation' }} ({{ rec.triage_level_name or 'No triage level' }})
+                </button>
+              </h2>
+              <div id="recordCollapse{{ rec.consultation_id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" data-bs-parent="#recordsAccordion">
+                <div class="accordion-body">
+                  <p class="mb-1"><strong>Visit Status:</strong> {{ rec.visit_status or '-' }}</p>
+                  <p class="mb-1"><strong>Initial Assessment:</strong> {{ rec.initial_assessment or '-' }}</p>
+                  <p class="mb-1"><strong>Vital Signs:</strong>
+                    BP {{ rec.bp or '-' }},
+                    HR {{ rec.heart_rate or '-' }},
+                    RR {{ rec.respiratory_rate or '-' }},
+                    Temp {{ rec.temperature or '-' }},
+                    O2 {{ rec.oxygen_saturation or '-' }},
+                    Wt {{ rec.weight or '-' }}
+                  </p>
+                  <hr>
+                  <p class="mb-1"><strong>History:</strong> {{ rec.history or '-' }}</p>
+                  <p class="mb-1"><strong>Physical Exam:</strong> {{ rec.physical_exam or '-' }}</p>
+                  <p class="mb-1"><strong>Assessment:</strong> {{ rec.assessment or '-' }}</p>
+                  <p class="mb-1"><strong>Plan:</strong> {{ rec.plan or '-' }}</p>
+                  <p class="mb-1"><strong>Follow-up:</strong> {{ rec.follow_up_instructions or '-' }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="patient-empty-state p-4 p-lg-5 text-center">
+          <div class="patient-empty-icon mb-2"><i class="bi bi-journal-x"></i></div>
+          <h2 class="h5 mb-2">No Medical Records Yet</h2>
+          <p class="text-muted mb-0 patient-empty-copy">No records were found for your account yet. Records will appear here after clinic consultations are completed.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

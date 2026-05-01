@@ -1,0 +1,78 @@
+<div class="list-group shadow-sm">
+	<div class="list-group-item active sidebar-section-title">{% if session.get('role_name') == 'patient_user' %}Patient Navigation{% elif session.get('role_name') == 'clinic_admin' %}Clinic Admin Navigation{% elif session.get('role_name') == 'system_admin' %}System Admin Navigation{% else %}Navigation{% endif %}</div>
+
+	{% set current_endpoint = request.endpoint or '' %}
+
+	{% if session.get('role_name') == 'patient_user' %}
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'patient.appointments_list' or current_endpoint == 'patient.appointment_detail' %}is-current{% endif %}" href="{{ url_for('patient.appointments_list') }}">
+			<i class="bi bi-calendar2-check" aria-hidden="true"></i>
+			<span>My Appointments</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'patient.medical_records_page' %}is-current{% endif %}" href="{{ url_for('patient.medical_records_page') }}">
+			<i class="bi bi-journal-medical" aria-hidden="true"></i>
+			<span>My Medical Records</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'patient.appointment_request_page' or current_endpoint == 'patient.appointment_request_submit' %}is-current{% endif %}" href="{{ url_for('patient.appointment_request_page') }}">
+			<i class="bi bi-plus-circle" aria-hidden="true"></i>
+			<span>Request Appointment</span>
+		</a>
+	{% elif session.get('role_name') == 'clinic_nurse' %}
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'nurse.appointments_review' or current_endpoint.startswith('nurse.appointment_review') or current_endpoint.startswith('nurse.check_in') or current_endpoint.startswith('nurse.create_visit') %}is-current{% endif %}" href="{{ url_for('nurse.appointments_review') }}">
+			<i class="bi bi-calendar2-check" aria-hidden="true"></i>
+			<span>Appointment Review</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'nurse.patient_search_page' %}is-current{% endif %}" href="{{ url_for('nurse.patient_search_page') }}">
+			<i class="bi bi-search" aria-hidden="true"></i>
+			<span>Patient Search</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'nurse.walkin_emergency_register_page' %}is-current{% endif %}" href="{{ url_for('nurse.walkin_emergency_register_page') }}">
+			<i class="bi bi-clipboard-plus" aria-hidden="true"></i>
+			<span>Walk-In / Emergency Register</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'nurse.visit_queue' %}is-current{% endif %}" href="{{ url_for('nurse.visit_queue') }}">
+			<i class="bi bi-list-check" aria-hidden="true"></i>
+			<span>Visit Queue</span>
+		</a>
+	{% elif session.get('role_name') == 'physician' %}
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'physician.queue_page' %}is-current{% endif %}" href="{{ url_for('physician.queue_page') }}">
+			<i class="bi bi-person-lines-fill" aria-hidden="true"></i>
+			<span>My Queue</span>
+		</a>
+	{% elif session.get('role_name') == 'clinic_admin' %}
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'clinic_admin.dashboard_page' %}is-current{% endif %}" href="{{ url_for('clinic_admin.dashboard_page') }}">
+			<i class="bi bi-speedometer2" aria-hidden="true"></i>
+			<span>Dashboard</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'clinic_admin.operations_overview_page' %}is-current{% endif %}" href="{{ url_for('clinic_admin.operations_overview_page') }}">
+			<i class="bi bi-activity" aria-hidden="true"></i>
+			<span>Overview</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'clinic_admin.reports_page' or current_endpoint == 'clinic_admin.report_detail_page' %}is-current{% endif %}" href="{{ url_for('clinic_admin.reports_page') }}">
+			<i class="bi bi-bar-chart-line" aria-hidden="true"></i>
+			<span>Reports</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'clinic_admin.audit_logs_page' %}is-current{% endif %}" href="{{ url_for('clinic_admin.audit_logs_page') }}">
+			<i class="bi bi-journal-text" aria-hidden="true"></i>
+			<span>Audit Logs</span>
+		</a>
+	{% elif session.get('role_name') == 'system_admin' %}
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'system_admin.users_list_page' or current_endpoint.startswith('system_admin.user_') %}is-current{% endif %}" href="{{ url_for('system_admin.users_list_page') }}">
+			<i class="bi bi-people" aria-hidden="true"></i>
+			<span>Users</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'system_admin.lookups_list_page' or current_endpoint.startswith('system_admin.lookup_') %}is-current{% endif %}" href="{{ url_for('system_admin.lookups_list_page', type='triage') }}">
+			<i class="bi bi-list-columns" aria-hidden="true"></i>
+			<span>Lookups</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'system_admin.configuration_page' %}is-current{% endif %}" href="{{ url_for('system_admin.configuration_page') }}">
+			<i class="bi bi-gear" aria-hidden="true"></i>
+			<span>Configuration</span>
+		</a>
+		<a class="list-group-item list-group-item-action d-flex align-items-center gap-2 {% if current_endpoint == 'system_admin.audit_logs_page' %}is-current{% endif %}" href="{{ url_for('system_admin.audit_logs_page') }}">
+			<i class="bi bi-journal-text" aria-hidden="true"></i>
+			<span>Audit Logs</span>
+		</a>
+	{% else %}
+		<div class="list-group-item text-muted">No quick links for this role yet.</div>
+	{% endif %}
+</div>

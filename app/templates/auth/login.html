@@ -1,0 +1,71 @@
+{% set hide_topbar = true %}
+{% set body_class = 'auth-login-body' %}
+{% set suppress_global_flash = true %}
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="auth-login-wrap">
+  <section class="auth-login-shell" aria-label="Login panel">
+    <div class="auth-login-visual">
+      <div class="auth-login-brand-block">
+        <div class="auth-login-brand">
+          <img src="{{ url_for('static', filename='img/batstateu-logo.png', v='20260418') }}" alt="Batangas State University logo" class="auth-login-brand-logo">
+          <div class="auth-login-brand-copy">
+            <h2>BatStateU CliniCare</h2>
+          </div>
+        </div>
+        <p class="auth-login-tagline">A smarter and more secure campus healthcare experience.</p>
+
+        <div class="auth-login-pill-group" aria-label="Platform highlights">
+          <span class="auth-login-pill"><i class="bi bi-shield-lock-fill" aria-hidden="true"></i> Secure Access</span>
+          <span class="auth-login-pill"><i class="bi bi-calendar2-check-fill" aria-hidden="true"></i> Faster Appointments</span>
+        </div>
+
+        <p class="auth-login-campus mb-0"><i class="bi bi-geo-alt-fill" aria-hidden="true"></i> Batangas State University - Lipa Campus</p>
+      </div>
+    </div>
+
+    <div class="auth-login-form-pane">
+      <a class="auth-login-home-link" href="{{ url_for('patient.home') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+      <h1>Welcome Back</h1>
+      <p class="auth-login-subtitle">Login to your account</p>
+
+      <div class="auth-login-alerts">
+        {% include 'includes/flash_messages.html' %}
+      </div>
+
+      <form method="post" action="{{ url_for('auth.login') }}" class="auth-login-form" novalidate>
+        <div class="mb-3">
+          <label for="institutional_email" class="form-label">Email Address</label>
+          <div class="auth-input-group">
+            <i class="bi bi-envelope-fill" aria-hidden="true"></i>
+            <input type="email" class="form-control" id="institutional_email" name="institutional_email" placeholder="Enter your email address" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="password" class="form-label">Password</label>
+          <div class="auth-input-group">
+            <i class="bi bi-lock-fill" aria-hidden="true"></i>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required>
+            <button class="auth-eye-toggle js-toggle-password" type="button" aria-label="Show password" data-target-input="password">
+              <i class="bi bi-eye-fill" aria-hidden="true"></i>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 auth-login-submit">Login</button>
+      </form>
+
+      <div class="auth-login-links">
+        <a href="#" aria-label="Forgot password">Forgot password?</a>
+        <a href="{{ url_for('auth.register_page') }}">Create an account</a>
+      </div>
+
+      <p class="auth-login-help mb-0">Need help? Contact support</p>
+    </div>
+  </section>
+
+  <p class="auth-login-copyright mb-0">&copy; {{ current_year or 2026 }} Batangas State University. All rights reserved.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 mb-1 role-page-title role-page-title-admin">Walk-In / Emergency Registration</h1>
+    <p class="text-muted role-page-description mb-0">Create a visit record for urgent and unscheduled patients entering the clinic.</p>
+  </div>
+  <a class="btn btn-outline-secondary" href="{{ url_for('nurse.patient_search_page') }}">Back to Patient Search</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    {% if selected_patient %}
+      <div class="alert alert-info">
+        <strong>Selected Patient:</strong> {{ selected_patient.full_name }} ({{ selected_patient.institutional_email }})
+      </div>
+    {% else %}
+      <div class="alert alert-warning">
+        No patient selected yet. You can still enter a known patient profile ID.
+      </div>
+    {% endif %}
+
+    <form method="post" action="{{ url_for('nurse.walkin_emergency_register_submit') }}" class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label" for="patient_profile_id">Patient Profile ID</label>
+        <input class="form-control" id="patient_profile_id" name="patient_profile_id" type="number" value="{{ patient_profile_id or '' }}" required>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="physician_user_id">Physician</label>
+        <select class="form-select" id="physician_user_id" name="physician_user_id" required>
+          <option value="">Select physician</option>
+          {% for physician in physicians %}
+            <option value="{{ physician.user_id }}">{{ physician.institutional_email }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="consultation_type_id">Consultation Type</label>
+        <select class="form-select" id="consultation_type_id" name="consultation_type_id" required>
+          <option value="">Select type</option>
+          {% for ct in consultation_types %}
+            <option value="{{ ct.consultation_type_id }}">{{ ct.display_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="triage_level_id">Initial Triage Level</label>
+        <select class="form-select" id="triage_level_id" name="triage_level_id">
+          <option value="">Optional</option>
+          {% for tl in triage_levels %}
+            <option value="{{ tl.triage_level_id }}">{{ tl.display_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label" for="arrival_time">Arrival Time</label>
+        <input class="form-control" type="datetime-local" id="arrival_time" name="arrival_time">
+      </div>
+
+      <div class="col-12">
+        <button class="btn btn-primary" type="submit">Create Visit</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

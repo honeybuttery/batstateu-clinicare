@@ -1,0 +1,134 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="patient-appt-page">
+  {% set stats = namespace(pending=0, approved=0, checked_in=0, completed=0) %}
+  {% set upcoming = namespace(item=None) %}
+  {% for appt in appointments %}
+    {% set appt_status = (appt.status or '')|lower %}
+    {% if appt_status == 'pending' %}
+      {% set stats.pending = stats.pending + 1 %}
+    {% elif appt_status == 'approved' %}
+      {% set stats.approved = stats.approved + 1 %}
+    {% elif appt_status == 'checked_in' %}
+      {% set stats.checked_in = stats.checked_in + 1 %}
+    {% elif appt_status == 'completed' %}
+      {% set stats.completed = stats.completed + 1 %}
+    {% endif %}
+
+    {% if upcoming.item is none and appt_status in ['approved', 'pending', 'checked_in'] %}
+      {% set upcoming.item = appt %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="patient-page-header mb-3 mb-lg-4">
+    <div>
+      <p class="patient-page-kicker role-page-kicker mb-1">PATIENT PORTAL</p>
+      <h1 class="h2 mb-1 role-page-title role-page-title-patient">My Appointments</h1>
+      <p class="text-muted role-page-description mb-0">Track your requests, schedule details, and consultation status in one place.</p>
+    </div>
+    <a class="btn btn-primary patient-new-appt-btn" href="{{ url_for('patient.appointment_request_page') }}">
+      <i class="bi bi-plus-circle"></i>
+      <span>New Appointment Request</span>
+    </a>
+  </div>
+
+  <div class="patient-stats-grid mb-3 mb-lg-4" aria-label="Appointment summary cards">
+    <article class="patient-stat-card status-pending">
+      <p class="patient-stat-label mb-1">Pending</p>
+      <p class="patient-stat-value mb-0">{{ stats.pending }}</p>
+    </article>
+    <article class="patient-stat-card status-approved">
+      <p class="patient-stat-label mb-1">Approved</p>
+      <p class="patient-stat-value mb-0">{{ stats.approved }}</p>
+    </article>
+    <article class="patient-stat-card status-checked-in">
+      <p class="patient-stat-label mb-1">Checked In</p>
+      <p class="patient-stat-value mb-0">{{ stats.checked_in }}</p>
+    </article>
+    <article class="patient-stat-card status-completed">
+      <p class="patient-stat-label mb-1">Completed</p>
+      <p class="patient-stat-value mb-0">{{ stats.completed }}</p>
+    </article>
+  </div>
+
+    <div class="patient-appt-layout">
+      <div class="card shadow-sm patient-appt-card">
+        <div class="card-body p-0">
+          {% if appointments %}
+            <div class="table-responsive patient-appt-table-wrap">
+              <table class="table table-hover align-middle mb-0 patient-appt-table">
+                <thead class="table-light">
+                  <tr>
+                    <th>Date</th>
+                    <th class="patient-col-time">Time</th>
+                    <th>Physician</th>
+                    <th class="patient-col-type">Type</th>
+                    <th>Status</th>
+                    <th class="text-end">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for appt in appointments %}
+                    {% set status_code = (appt.status or 'unknown')|replace('_', '-')|lower %}
+                    <tr>
+                      <td class="patient-date-cell">{{ appt.scheduled_date or '-' }}</td>
+                      <td class="patient-time-cell patient-col-time">{{ appt.scheduled_time or '-' }}</td>
+                      <td class="patient-physician-email" title="{{ appt.physician_email or '-' }}">
+                        <span>{{ appt.physician_email or '-' }}</span>
+                      </td>
+                      <td class="patient-col-type"><span class="patient-type-pill">{{ appt.consultation_type_name or '-' }}</span></td>
+                      <td>
+                        <span class="badge patient-status-badge status-{{ status_code }}">
+                          {{ appt.status|display_label }}
+                        </span>
+                      </td>
+                      <td class="text-end">
+                        <a class="btn btn-sm btn-outline-primary patient-view-btn" href="{{ url_for('patient.appointment_detail', appointment_id=appt.appointment_id) }}">View</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="patient-empty-state p-4 p-lg-5 text-center">
+              <div class="patient-empty-icon mb-2"><i class="bi bi-calendar2-x"></i></div>
+              <h2 class="h5 mb-2">No Appointments Yet</h2>
+              <p class="text-muted mb-3 patient-empty-copy">You have no appointment requests at the moment. Start by requesting your first appointment.</p>
+              <a class="btn btn-primary" href="{{ url_for('patient.appointment_request_page') }}">Request Your First Appointment</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <aside class="patient-quick-panel" aria-label="Quick panel">
+        <div class="patient-quick-card">
+          <p class="patient-quick-label mb-1">Next Appointment</p>
+          {% if upcoming.item %}
+            <h2 class="patient-quick-title mb-1">{{ upcoming.item.scheduled_date or '-' }} at {{ upcoming.item.scheduled_time or '-' }}</h2>
+            <p class="mb-1 text-muted">{{ upcoming.item.physician_email or 'Physician not assigned' }}</p>
+            <p class="mb-0"><span class="badge patient-status-badge status-{{ (upcoming.item.status or 'unknown')|replace('_', '-')|lower }}">{{ upcoming.item.status|display_label }}</span></p>
+          {% else %}
+            <p class="mb-0 text-muted">No upcoming appointment yet.</p>
+          {% endif %}
+        </div>
+
+        <div class="patient-quick-card">
+          <p class="patient-quick-label mb-1">Quick Reminders</p>
+          <ul class="patient-quick-list mb-0 ps-3">
+            <li>Arrive at least 10 minutes early.</li>
+            <li>Bring your school ID.</li>
+            <li>Update your contact details if needed.</li>
+          </ul>
+        </div>
+
+        <div class="patient-quick-card">
+          <p class="patient-quick-label mb-1">Clinic Help</p>
+          <p class="mb-1"><i class="bi bi-envelope me-2"></i> batstateuclinicare.lipa@gmail.com</p>
+          <p class="mb-0"><i class="bi bi-clock me-2"></i> Mon-Fri, 8:00 AM - 5:00 PM</p>
+        </div>
+      </aside>
+    </div>
+</div>
+{% endblock %}

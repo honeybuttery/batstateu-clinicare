@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">{{ report.title }}</h1>
+  <a class="btn btn-outline-secondary" href="{{ url_for('clinic_admin.reports_page') }}">Back to Reports</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <p class="text-muted mb-3">{{ report.description }}</p>
+
+    {% if report.rows %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              {% for col in report.columns %}<th>{{ col|display_label }}</th>{% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in report.rows %}
+              <tr>
+                {% for col in report.columns %}<td>{{ row[col]|display_label }}</td>{% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-muted">No data available for this report.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{{ page_title or 'Home' }} | {{ config.APP_NAME }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/app.css', v='20260427-otp-layout-fix') }}" rel="stylesheet">
+</head>
+<body class="{% if landing_page|default(false) %}landing-body{% else %}app-body bg-light{% endif %} {{ body_class|default('') }}">
+  {% if not hide_topbar|default(false) %}
+    {% include 'includes/topbar.html' %}
+  {% endif %}
+
+  {% set is_landing = landing_page|default(false) %}
+  {% if is_landing %}
+    <main>
+      <div class="container pt-3">
+        {% if not suppress_global_flash|default(false) %}
+          {% include 'includes/flash_messages.html' %}
+        {% endif %}
+      </div>
+  {% else %}
+    <main class="container py-4 app-shell">
+      {% if not suppress_global_flash|default(false) %}
+        {% include 'includes/flash_messages.html' %}
+      {% endif %}
+      <div class="row g-4">
+        {% if session.get('user_id') %}
+          <aside class="col-lg-3">
+            {% include 'includes/sidebar.html' %}
+          </aside>
+        {% endif %}
+        <section class="{{ 'col-lg-9' if session.get('user_id') else 'col-12' }}">
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+  {% if is_landing %}
+    </main>
+  {% else %}
+        </section>
+      </div>
+    </main>
+  {% endif %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

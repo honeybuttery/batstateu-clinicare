@@ -1,0 +1,18 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="mb-3">
+  <h1 class="h4 mb-1 role-page-title role-page-title-admin">De-identified Reports</h1>
+  <p class="text-muted role-page-description mb-0">Open privacy-safe operational reports for trend review, compliance, and planning.</p>
+</div>
+<div class="card shadow-sm">
+  <div class="list-group list-group-flush">
+    {% for r in reports %}
+      <a class="list-group-item list-group-item-action" href="{{ url_for('clinic_admin.report_detail_page', report_key=r.key) }}">
+        <strong>{{ r.title }}</strong>
+        <div class="small text-muted">{{ r.description }}</div>
+      </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h4 mb-0">Appointment #{{ appointment.appointment_id }}</h1>
+  <a class="btn btn-outline-secondary" href="{{ url_for('patient.appointments_list') }}">Back to List</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Status:</strong></div>
+      <div class="col-md-8"><span class="badge text-bg-secondary">{{ appointment.status }}</span></div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Physician:</strong></div>
+      <div class="col-md-8">{{ appointment.physician_email }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Consultation Type:</strong></div>
+      <div class="col-md-8">{{ appointment.consultation_type_name }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Scheduled Date:</strong></div>
+      <div class="col-md-8">{{ appointment.scheduled_date or '-' }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Scheduled Time:</strong></div>
+      <div class="col-md-8">{{ appointment.scheduled_time or '-' }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Reason:</strong></div>
+      <div class="col-md-8">{{ appointment.reason or '-' }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Requested By:</strong></div>
+      <div class="col-md-8">{{ appointment.requested_by_email }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Approved By:</strong></div>
+      <div class="col-md-8">{{ appointment.approved_by_email or '-' }}</div>
+    </div>
+    <div class="row mb-2">
+      <div class="col-md-4"><strong>Created At:</strong></div>
+      <div class="col-md-8">{{ appointment.created_at }}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4"><strong>Updated At:</strong></div>
+      <div class="col-md-8">{{ appointment.updated_at }}</div>
+    </div>
+  </div>
+</div>
+{% endblock %}
