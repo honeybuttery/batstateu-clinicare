@@ -1,147 +1,75 @@
 # Implementation Notes
-## BatStateU CliniCare — Starter Scaffold Checklist
+## BatStateU CliniCare - Current Flask + MySQL Implementation Status
 
-This checklist is the minimum starter scaffold for the approved PHP + MySQL localhost prototype.
-
----
-
-## A. First Files to Create per Folder
-
-### public/
-- [ ] `public/index.php`
-- [ ] `public/.htaccess`
-- [ ] `public/assets/css/app.css`
-- [ ] `public/assets/js/app.js`
-
-### app/config/
-- [ ] `app/config/app.php`
-- [ ] `app/config/database.php`
-- [ ] `app/config/constants.php`
-
-### app/core/
-- [ ] `app/core/Router.php`
-- [ ] `app/core/Controller.php`
-- [ ] `app/core/View.php`
-- [ ] `app/core/Session.php`
-- [ ] `app/core/Auth.php`
-- [ ] `app/core/Authorization.php`
-
-### app/helpers/
-- [ ] `app/helpers/functions.php`
-- [ ] `app/helpers/validation.php`
-
-### app/views/layouts/
-- [ ] `app/views/layouts/main.php`
-- [ ] `app/views/layouts/auth.php`
-
-### app/views/shared/
-- [ ] `app/views/shared/topbar.php`
-- [ ] `app/views/shared/sidebar.php`
-- [ ] `app/views/shared/flash_messages.php`
-
-### app/views/auth/
-- [ ] `app/views/auth/login.php`
-- [ ] `app/views/auth/register.php`
-- [ ] `app/views/auth/verify_notice.php`
-
-### app/controllers/
-- [ ] `app/controllers/HomeController.php`
-- [ ] `app/controllers/AuthController.php`
-
-### app/models/
-- [ ] `app/models/User.php`
-- [ ] `app/models/PatientProfile.php`
-
-### storage/
-- [ ] `storage/logs/.gitkeep`
-- [ ] `storage/uploads/.gitkeep`
+This file was updated to reflect the current Python Flask codebase (not the old PHP starter scaffold).
 
 ---
 
-## B. Purpose of Each Starter Group
+## A. Baseline Already Implemented
 
-- `public/`: web entry + static assets
-- `app/config/`: app/database configuration and constants
-- `app/core/`: minimal MVC core + auth/session/authorization shell
-- `app/helpers/`: common utility and validation helpers
-- `app/views/layouts|shared/`: reusable page shell and partials
-- `app/views/auth/`: initial auth screens
-- `app/controllers/`: first runnable route handlers
-- `app/models/`: initial DB entity wrappers
-- `storage/`: runtime logs and upload placeholders
+### Application bootstrap and config
+- [x] `run.py` local entry point
+- [x] `app/__init__.py` application factory
+- [x] `app/config.py` environment-based configuration
+- [x] Request CSRF token validation for POST routes
+- [x] Centralized auth-aware error redirects (403/404/500)
 
----
+### Database access layer
+- [x] `app/db/connection.py` MySQL connection + cursor context manager
+- [x] Repository package under `app/db/repositories/`
+- [x] SQL schema and routines files in root (`batstateu_clinicare_schema.sql`, `batstateu_clinicare_routines.sql`)
 
-## C. Files That Should Have Starter Code Immediately
+### Authentication and account verification
+- [x] Login/logout routes
+- [x] Registration with OTP generation flow
+- [x] Resend verification flow
+- [x] OTP verification flow
+- [x] Role-based home redirection
 
-- `public/index.php`
-- `public/.htaccess`
-- `app/config/app.php`
-- `app/config/database.php`
-- `app/config/constants.php`
-- `app/core/Router.php`
-- `app/core/Controller.php`
-- `app/core/View.php`
-- `app/core/Session.php`
-- `app/helpers/functions.php`
-- `app/views/layouts/main.php`
-- `app/views/shared/flash_messages.php`
-- `app/controllers/HomeController.php`
+### Role modules and routing
+- [x] Blueprint registration for patient, nurse, physician, clinic admin, system admin
+- [x] Route modules available per role under `app/modules/`
+- [x] Navigation helpers and role-based decorators
 
----
+### UI and static resources
+- [x] Base layout and shared includes (`templates/layouts`, `templates/includes`)
+- [x] Auth templates (`templates/auth`)
+- [x] Module templates for nurse/patient/physician/clinic admin/system admin
+- [x] Shared app assets in `app/static/css` and `app/static/js`
 
-## D. Files That Can Stay Empty Placeholders for Now
-
-- `app/core/Auth.php`
-- `app/core/Authorization.php`
-- `app/helpers/validation.php`
-- `app/views/layouts/auth.php`
-- `app/views/shared/topbar.php`
-- `app/views/shared/sidebar.php`
-- `app/views/auth/login.php`
-- `app/views/auth/register.php`
-- `app/views/auth/verify_notice.php`
-- `app/controllers/AuthController.php`
-- `app/models/User.php`
-- `app/models/PatientProfile.php`
-- `public/assets/css/app.css`
-- `public/assets/js/app.js`
+### Services and testing
+- [x] Service layer package under `app/services/`
+- [x] Email service wiring present (`app/services/email_service.py`)
+- [x] Initial unit tests present (`tests/test_settings_service.py`)
 
 ---
 
-## E. Recommended File Creation Order
+## B. Environment and Run Checklist
 
-1. Config files (`app.php`, `constants.php`, `database.php`)
-2. Core files (`Router.php`, `Controller.php`, `View.php`, `Session.php`)
-3. Helpers (`functions.php`)
-4. Public bootstrap (`index.php`, `.htaccess`)
-5. Layout + shared flash partial
-6. `HomeController.php` + one starter home view
-7. Placeholder auth/model files
-
----
-
-## F. Minimum Bootstrap Files Required to Start Running
-
-These are the minimum files needed so the project can run:
-
-- `public/index.php`
-- `public/.htaccess`
-- `app/config/app.php`
-- `app/config/database.php`
-- `app/core/Router.php`
-- `app/core/Controller.php`
-- `app/core/View.php`
-- `app/core/Session.php`
-- `app/helpers/functions.php`
-- `app/controllers/HomeController.php`
-- `app/views/layouts/main.php`
+1. Ensure MySQL is running.
+2. Import database artifacts in this order:
+	- `batstateu_clinicare_schema.sql`
+	- `batstateu_clinicare_routines.sql`
+	- optional seed files from `database/`
+3. Configure environment values in `.env` (or copy from `.env.example`).
+4. Install dependencies from `requirements.txt`.
+5. Run the app using `python run.py`.
 
 ---
 
-## G. Scope Guard (Do Not Expand Yet)
+## C. Suggested Next Implementation Priorities
 
-- Do not add full module code yet.
-- Keep `visits` as central workflow in later module implementation.
-- Use approved schema + procedures/triggers only.
-- Build role dashboards and core flows incrementally after bootstrap is stable.
+- [ ] Expand automated tests beyond settings helpers (auth, repositories, service flows).
+- [ ] Add validation hardening for complex form submissions across module routes.
+- [ ] Add stronger operational logging and error observability in production mode.
+- [ ] Review authorization coverage on all mutating endpoints.
+- [ ] Add deployment profile documentation (debug vs production configuration).
+
+---
+
+## D. Scope Guard
+
+- Keep visit-centric workflow as the primary cross-role process.
+- Continue using approved schema, routines, and triggers as source of truth.
+- Implement features incrementally by module while preserving role boundaries.
+- Avoid major architectural rewrites while stabilizing core flows.
