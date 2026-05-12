@@ -1,5 +1,11 @@
 {
   "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
   "python.terminal.useEnvFile": true,
-  "python.envFile": "${workspaceFolder}\\.env"
+  "python.envFile": "${workspaceFolder}\\.env",
+  "files.exclude": {
+    "**/.venv": true
+  },
+  "search.exclude": {
+    "**/.venv": true
+  }
 }

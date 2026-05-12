@@ -30,6 +30,7 @@
           <table class="table table-hover mb-0">
             <thead class="table-light">
               <tr>
+                <th>ID</th>
                 <th>Patient</th>
                 <th>Category</th>
                 <th>Contact</th>
@@ -39,6 +40,7 @@
             <tbody>
               {% for p in patients %}
                 <tr>
+                  <td class="fw-semibold">{{ p.patient_profile_id }}</td>
                   <td>
                     <div>{{ p.full_name }}</div>
                     <small class="text-muted">{{ p.institutional_email }}</small>
