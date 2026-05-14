@@ -17,6 +17,14 @@ from app.services.visit_workflow_service import (
 bp = Blueprint("physician", __name__)
 
 
+@bp.get("/physician/dashboard")
+@login_required
+@role_required("physician")
+def dashboard_page():
+	"""Redirect to the physician landing page."""
+	return redirect(url_for("physician.queue_page"))
+
+
 @bp.get("/physician/queue")
 @login_required
 @role_required("physician")

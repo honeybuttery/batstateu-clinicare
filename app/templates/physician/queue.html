@@ -42,7 +42,7 @@
                   <div>{{ item.patient_name }}</div>
                   <small class="text-muted">{{ item.patient_email }}</small>
                 </td>
-                <td>{{ item.arrival_time }}</td>
+                <td>{{ item.arrival_time|local_dt }}</td>
                 <td>{{ item.consultation_type_name }}</td>
                 <td>{{ item.triage_level_name or '-' }}</td>
                 <td><span class="badge text-bg-info">{{ item.visit_status }}</span></td>

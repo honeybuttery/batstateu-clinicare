@@ -9,6 +9,7 @@ from typing import Any
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.db.connection import get_db_cursor
+from app.db.repositories.patient_repository import create_patient_profile_for_user
 from app.services.system_settings_service import get_allowed_email_domains
 
 
@@ -65,6 +66,10 @@ def register_user(
 	institutional_email: str,
 	password: str,
 	full_name: str = "",
+	patient_category: str = "student",
+	student_course: str | None = None,
+	student_year_level: int | None = None,
+	faculty_staff_department: str | None = None,
 	role_name: str = "patient_user",
 	token_valid_hours: int = 24,
 ) -> dict[str, Any]:
@@ -100,6 +105,15 @@ def register_user(
 		}
 
 	password_hash = generate_password_hash(password)
+
+	if patient_category not in {"student", "faculty", "staff"}:
+		return {
+			"ok": False,
+			"message": "Select a valid patient category.",
+			"otp_code": None,
+			"user_id": None,
+			"created_new_user": False,
+		}
 
 	with get_db_cursor() as cur:
 		# Resolve role_id from roles table.
@@ -166,6 +180,25 @@ def register_user(
 			(full_name.strip() or None, email, password_hash, role_id),
 		)
 		user_id = cur.lastrowid
+
+		if role_name == "patient_user":
+			profile_id = create_patient_profile_for_user(
+				user_id=int(user_id),
+				patient_category=patient_category,
+				full_name=full_name.strip() or email,
+				institutional_email=email,
+				student_course=(student_course or "").strip() or None,
+				student_year_level=student_year_level,
+				faculty_staff_department=(faculty_staff_department or "").strip() or None,
+			)
+			if not profile_id:
+				return {
+					"ok": False,
+					"message": "Failed to create patient profile.",
+					"otp_code": None,
+					"user_id": None,
+					"created_new_user": False,
+				}
 		otp_code = _upsert_verification_otp(cur, int(user_id), token_valid_hours)
 
 	return {

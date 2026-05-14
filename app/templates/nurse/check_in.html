@@ -11,7 +11,7 @@
     <p class="mb-1"><strong>Status:</strong> <span class="badge text-bg-secondary">{{ appointment.status }}</span></p>
     <p class="mb-1"><strong>Patient:</strong> {{ appointment.patient_name }} ({{ appointment.patient_email }})</p>
     <p class="mb-1"><strong>Physician:</strong> {{ appointment.physician_email }}</p>
-    <p class="mb-3"><strong>Schedule:</strong> {{ appointment.scheduled_date or '-' }} {{ appointment.scheduled_time or '-' }}</p>
+    <p class="mb-3"><strong>Schedule:</strong> {{ appointment.scheduled_date or '-' }} {{ appointment.scheduled_time|time_12h }}</p>
 
     {% if appointment.status == 'approved' and not checked_in_success %}
       <form method="post" action="{{ url_for('nurse.check_in_submit', appointment_id=appointment.appointment_id) }}">

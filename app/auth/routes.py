@@ -52,9 +52,6 @@ def login():
 		current_app.logger.warning("Failed to write login audit log.")
 
 	flash("Welcome back!", "success")
-	if user["role_name"] == "patient_user":
-		return redirect(url_for("patient.appointments_list"))
-
 	return redirect(url_for(get_role_home_endpoint(user["role_name"])))
 
 
@@ -95,13 +92,25 @@ def register():
 	full_name = request.form.get("full_name", "")
 	password = request.form.get("password", "")
 	confirm_password = request.form.get("confirm_password", "")
+	patient_category = (request.form.get("patient_category") or "").strip().lower()
+	student_course = (request.form.get("student_course") or "").strip() or None
+	student_year_level = request.form.get("student_year_level", type=int)
+	faculty_staff_department = (request.form.get("faculty_staff_department") or "").strip() or None
 
 	if password != confirm_password:
 		flash("Password and confirm password do not match.", "danger")
 		return redirect(url_for("auth.register_page"))
 
 	try:
-		result = register_user(email, password, full_name)
+		result = register_user(
+			email,
+			password,
+			full_name,
+			patient_category=patient_category or "student",
+			student_course=student_course,
+			student_year_level=student_year_level,
+			faculty_staff_department=faculty_staff_department,
+		)
 	except mysql.connector.Error as e:
 		current_app.logger.error(f"Database connection error during registration: {e}")
 		flash("Database is unavailable. Please make sure MySQL is running and try again.", "danger")

@@ -72,21 +72,56 @@ def list_audit_logs(
         return cur.fetchall()
 
 
-def list_audit_logs_deidentified(limit: int = 200) -> list[dict[str, Any]]:
+def list_audit_logs_deidentified(
+    *,
+    limit: int = 200,
+    action: str | None = None,
+    action_like: str | None = None,
+    entity: str | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> list[dict[str, Any]]:
+    sql = [
+        "SELECT",
+        "    al.audit_log_id,",
+        "    al.action_type,",
+        "    al.entity_type,",
+        "    al.entity_id,",
+        "    al.description,",
+        "    al.performed_at",
+        "FROM audit_logs al",
+    ]
+
+    params: list = []
+    where: list[str] = []
+
+    if action:
+        where.append("al.action_type = %s")
+        params.append(action)
+
+    if action_like:
+        where.append("al.action_type LIKE %s")
+        params.append(action_like)
+
+    if entity:
+        where.append("al.entity_type = %s")
+        params.append(entity)
+
+    if date_from:
+        where.append("al.performed_at >= %s")
+        params.append(date_from)
+
+    if date_to:
+        where.append("al.performed_at <= %s")
+        params.append(date_to)
+
+    if where:
+        sql.append("WHERE " + " AND ".join(where))
+
+    sql.append("ORDER BY al.performed_at DESC")
+    sql.append("LIMIT %s")
+    params.append(limit)
+
     with get_db_cursor() as cur:
-        cur.execute(
-            """
-            SELECT
-                al.audit_log_id,
-                al.action_type,
-                al.entity_type,
-                al.entity_id,
-                al.description,
-                al.performed_at
-            FROM audit_logs al
-            ORDER BY al.performed_at DESC
-            LIMIT %s
-            """,
-            (limit,),
-        )
+        cur.execute("\n".join(sql), tuple(params))
         return cur.fetchall()

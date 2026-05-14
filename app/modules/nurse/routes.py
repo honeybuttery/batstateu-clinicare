@@ -27,8 +27,17 @@ from app.services.visit_workflow_service import (
 	save_triage_form,
 	search_existing_patients,
 )
+from app.utils.clinic_schedule import validate_clinic_schedule
 
 bp = Blueprint("nurse", __name__)
+
+
+@bp.get("/nurse/dashboard")
+@login_required
+@role_required("clinic_nurse")
+def dashboard_page():
+	"""Redirect to the nurse landing page."""
+	return redirect(url_for("nurse.appointments_review"))
 
 
 @bp.get("/nurse/appointments/review")
@@ -95,6 +104,11 @@ def appointment_review_submit(appointment_id: int):
 
 		if not physician_user_id or not scheduled_date or not scheduled_time:
 			flash("Physician, date, and time are required when approving/adjusting.", "danger")
+			return redirect(url_for("nurse.appointment_review_detail", appointment_id=appointment_id))
+
+		schedule_ok, schedule_message = validate_clinic_schedule(scheduled_date, scheduled_time)
+		if not schedule_ok:
+			flash(schedule_message, "danger")
 			return redirect(url_for("nurse.appointment_review_detail", appointment_id=appointment_id))
 
 	try:
@@ -274,6 +288,9 @@ def patient_register_submit():
 	full_name = (request.form.get("full_name") or "").strip()
 	institutional_email = (request.form.get("institutional_email") or "").strip()
 	contact_number = (request.form.get("contact_number") or "").strip() or None
+	student_course = (request.form.get("student_course") or "").strip() or None
+	student_year_level = request.form.get("student_year_level", type=int)
+	faculty_staff_department = (request.form.get("faculty_staff_department") or "").strip() or None
 
 	try:
 		result = register_walkin_patient(
@@ -281,6 +298,9 @@ def patient_register_submit():
 			full_name=full_name,
 			institutional_email=institutional_email,
 			contact_number=contact_number,
+			student_course=student_course,
+			student_year_level=student_year_level,
+			faculty_staff_department=faculty_staff_department,
 		)
 	except mysql.connector.Error as exc:
 		flash(str(exc), "danger")

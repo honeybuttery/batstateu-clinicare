@@ -11,7 +11,7 @@ from .auth.navigation import get_role_home_endpoint
 from .config import Config
 from .extensions import init_extensions
 from .modules import register_blueprints
-from .utils.display_labels import format_display_label
+from .utils.display_labels import format_display_label, format_local_datetime, format_time_12h
 
 
 def create_app(config_class: type[Config] = Config) -> Flask:
@@ -48,6 +48,14 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     @app.template_filter("display_label")
     def display_label_filter(value):
         return format_display_label(value)
+
+    @app.template_filter("time_12h")
+    def time_12h_filter(value):
+        return format_time_12h(value)
+
+    @app.template_filter("local_dt")
+    def local_dt_filter(value):
+        return format_local_datetime(value)
 
     @app.before_request
     def validate_csrf_token():

@@ -35,6 +35,9 @@ def update_patient_profile_for_user(
     allergies: str | None = None,
     known_conditions: str | None = None,
     current_medications: str | None = None,
+    student_course: str | None = None,
+    student_year_level: int | None = None,
+    faculty_staff_department: str | None = None,
 ) -> dict[str, Any]:
 	"""Update patient profile for logged-in user."""
 	patient = get_patient_profile_by_user_id(user_id)
@@ -48,6 +51,9 @@ def update_patient_profile_for_user(
 		allergies=allergies,
 		known_conditions=known_conditions,
 		current_medications=current_medications,
+        student_course=student_course,
+        student_year_level=student_year_level,
+        faculty_staff_department=faculty_staff_department,
 	)
 	
 	if not success:

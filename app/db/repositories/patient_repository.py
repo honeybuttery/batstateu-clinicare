@@ -41,7 +41,10 @@ def get_patient_profile_by_id(patient_profile_id: int) -> dict[str, Any] | None:
                 patient_category,
                 full_name,
                 institutional_email,
-                contact_number
+                contact_number,
+                student_course,
+                student_year_level,
+                faculty_staff_department
             FROM patient_profiles
             WHERE patient_profile_id = %s
             LIMIT 1
@@ -62,6 +65,9 @@ def get_patient_profile_by_user_id(user_id: int) -> dict[str, Any] | None:
                 full_name,
                 institutional_email,
                 contact_number,
+                student_course,
+                student_year_level,
+                faculty_staff_department,
                 allergies,
                 known_conditions,
                 current_medications
@@ -80,6 +86,9 @@ def create_patient_profile_for_walkin(
     full_name: str,
     institutional_email: str,
     contact_number: str | None,
+    student_course: str | None = None,
+    student_year_level: int | None = None,
+    faculty_staff_department: str | None = None,
 ) -> int | None:
     with get_db_cursor() as cur:
         cur.execute(
@@ -89,10 +98,58 @@ def create_patient_profile_for_walkin(
                 patient_category,
                 full_name,
                 institutional_email,
-                contact_number
-            ) VALUES (NULL, %s, %s, %s, %s)
+                contact_number,
+                student_course,
+                student_year_level,
+                faculty_staff_department
+            ) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s)
             """,
-            (patient_category, full_name, institutional_email, contact_number),
+            (
+                patient_category,
+                full_name,
+                institutional_email,
+                contact_number,
+                student_course,
+                student_year_level,
+                faculty_staff_department,
+            ),
+        )
+        return int(cur.lastrowid)
+
+
+def create_patient_profile_for_user(
+    *,
+    user_id: int,
+    patient_category: str,
+    full_name: str,
+    institutional_email: str,
+    student_course: str | None = None,
+    student_year_level: int | None = None,
+    faculty_staff_department: str | None = None,
+) -> int | None:
+    with get_db_cursor() as cur:
+        cur.execute(
+            """
+            INSERT INTO patient_profiles (
+                user_id,
+                patient_category,
+                full_name,
+                institutional_email,
+                contact_number,
+                student_course,
+                student_year_level,
+                faculty_staff_department
+            ) VALUES (%s, %s, %s, %s, NULL, %s, %s, %s)
+            """,
+            (
+                user_id,
+                patient_category,
+                full_name,
+                institutional_email,
+                student_course,
+                student_year_level,
+                faculty_staff_department,
+            ),
         )
         return int(cur.lastrowid)
 
@@ -105,41 +162,53 @@ def update_patient_profile(
     allergies: str | None = None,
     known_conditions: str | None = None,
     current_medications: str | None = None,
+    student_course: str | None = None,
+    student_year_level: int | None = None,
+    faculty_staff_department: str | None = None,
 ) -> bool:
-	"""Update patient profile fields. Only provided fields are updated."""
-	with get_db_cursor() as cur:
-		updates = []
-		params = []
-		
-		if full_name is not None:
-			updates.append("full_name = %s")
-			params.append(full_name)
-		if contact_number is not None:
-			updates.append("contact_number = %s")
-			params.append(contact_number)
-		if allergies is not None:
-			updates.append("allergies = %s")
-			params.append(allergies)
-		if known_conditions is not None:
-			updates.append("known_conditions = %s")
-			params.append(known_conditions)
-		if current_medications is not None:
-			updates.append("current_medications = %s")
-			params.append(current_medications)
-		
-		if not updates:
-			return True  # No updates requested
-		
-		params.append(patient_profile_id)
-		update_clause = ", ".join(updates)
-		
-		cur.execute(
-			f"""
-			UPDATE patient_profiles
-			SET {update_clause}
-			WHERE patient_profile_id = %s
-			""",
-			params,
-		)
-		
-		return cur.rowcount > 0
+    """Update patient profile fields. Only provided fields are updated."""
+    with get_db_cursor() as cur:
+        updates = []
+        params = []
+
+        if full_name is not None:
+            updates.append("full_name = %s")
+            params.append(full_name)
+        if contact_number is not None:
+            updates.append("contact_number = %s")
+            params.append(contact_number)
+        if allergies is not None:
+            updates.append("allergies = %s")
+            params.append(allergies)
+        if known_conditions is not None:
+            updates.append("known_conditions = %s")
+            params.append(known_conditions)
+        if current_medications is not None:
+            updates.append("current_medications = %s")
+            params.append(current_medications)
+        if student_course is not None:
+            updates.append("student_course = %s")
+            params.append(student_course)
+        if student_year_level is not None:
+            updates.append("student_year_level = %s")
+            params.append(student_year_level)
+        if faculty_staff_department is not None:
+            updates.append("faculty_staff_department = %s")
+            params.append(faculty_staff_department)
+
+        if not updates:
+            return True  # No updates requested
+
+        params.append(patient_profile_id)
+        update_clause = ", ".join(updates)
+
+        cur.execute(
+            f"""
+            UPDATE patient_profiles
+            SET {update_clause}
+            WHERE patient_profile_id = %s
+            """,
+            params,
+        )
+
+        return cur.rowcount > 0

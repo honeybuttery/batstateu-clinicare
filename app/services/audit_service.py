@@ -118,9 +118,69 @@ def get_audit_logs_for_system_admin(
 	return {"ok": True, "scope": "full", "logs": logs}
 
 
-def get_audit_logs_for_clinic_admin(limit: int = 200) -> dict[str, Any]:
+def get_audit_logs_for_clinic_admin(
+	*,
+	limit: int = 200,
+	showing: str | None = None,
+	date_range: str | None = None,
+	action: str | None = None,
+	entity: str | None = None,
+) -> dict[str, Any]:
+	"""Return de-identified audit logs for clinic admin with optional filters."""
+	date_from = None
+	date_to = None
+	now = datetime.utcnow()
+	if date_range in (None, "last_30_days"):
+		date_from = (now - timedelta(days=30)).strftime("%Y-%m-%d 00:00:00")
+		date_to = now.strftime("%Y-%m-%d 23:59:59")
+	elif date_range == "today":
+		date_from = now.strftime("%Y-%m-%d 00:00:00")
+		date_to = now.strftime("%Y-%m-%d 23:59:59")
+	elif date_range == "last_7_days":
+		date_from = (now - timedelta(days=7)).strftime("%Y-%m-%d 00:00:00")
+		date_to = now.strftime("%Y-%m-%d 23:59:59")
+
+	mapped_action = None
+	mapped_action_like = None
+	mapped_entity = None
+
+	if showing == "login_activity":
+		mapped_action = None
+	elif showing == "user_changes":
+		mapped_entity = "users"
+	elif showing == "lookup_changes":
+		mapped_entity = "lookups"
+	elif showing == "configuration_changes":
+		mapped_entity = "configuration"
+	elif showing == "failed_actions":
+		mapped_action = None
+	elif showing == "my_activity":
+		mapped_action = None
+
+	if action == "login":
+		mapped_action = "login"
+	elif action == "create":
+		mapped_action_like = "%created%"
+	elif action == "update":
+		mapped_action_like = "%updated%"
+	elif action == "delete":
+		mapped_action_like = "%deleted%"
+	elif action == "failed_login":
+		mapped_action = "failed_login"
+
+	if entity and entity != "all":
+		mapped_entity = entity
+
+	logs = list_audit_logs_deidentified(
+		limit=limit,
+		action=mapped_action,
+		action_like=mapped_action_like,
+		entity=mapped_entity,
+		date_from=date_from,
+		date_to=date_to,
+	)
 	return {
 		"ok": True,
 		"scope": "deidentified",
-		"logs": list_audit_logs_deidentified(limit=limit),
+		"logs": logs,
 	}

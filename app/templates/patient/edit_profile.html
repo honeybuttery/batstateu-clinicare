@@ -49,6 +49,24 @@
           <small class="text-muted">List medications you're currently taking with dosages</small>
         </div>
 
+        <div class="row">
+          <div class="col-lg-4 mb-4">
+            <label for="student_course" class="form-label">Student Course</label>
+            <input type="text" class="form-control" id="student_course" name="student_course" value="{{ patient.student_course or '' }}" placeholder="e.g., BSIT">
+            <small class="text-muted">Fill in if you are a student</small>
+          </div>
+          <div class="col-lg-4 mb-4">
+            <label for="student_year_level" class="form-label">Student Year Level</label>
+            <input type="number" class="form-control" id="student_year_level" name="student_year_level" value="{{ patient.student_year_level or '' }}" min="1" max="6" placeholder="e.g., 3">
+            <small class="text-muted">Fill in if you are a student</small>
+          </div>
+          <div class="col-lg-4 mb-4">
+            <label for="faculty_staff_department" class="form-label">Faculty/Staff Department</label>
+            <input type="text" class="form-control" id="faculty_staff_department" name="faculty_staff_department" value="{{ patient.faculty_staff_department or '' }}" placeholder="e.g., College of Engineering">
+            <small class="text-muted">Fill in if you are faculty or staff</small>
+          </div>
+        </div>
+
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-end">
           <a href="{{ url_for('patient.medical_records_page') }}" class="btn btn-outline-secondary me-2">Cancel</a>
           <button type="submit" class="btn btn-primary">Save Changes</button>

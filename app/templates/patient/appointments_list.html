@@ -73,7 +73,7 @@
                     {% set status_code = (appt.status or 'unknown')|replace('_', '-')|lower %}
                     <tr>
                       <td class="patient-date-cell">{{ appt.scheduled_date or '-' }}</td>
-                      <td class="patient-time-cell patient-col-time">{{ appt.scheduled_time or '-' }}</td>
+                      <td class="patient-time-cell patient-col-time">{{ appt.scheduled_time|time_12h }}</td>
                       <td class="patient-physician-email" title="{{ appt.physician_email or '-' }}">
                         <span>{{ appt.physician_email or '-' }}</span>
                       </td>
@@ -106,7 +106,7 @@
         <div class="patient-quick-card">
           <p class="patient-quick-label mb-1">Next Appointment</p>
           {% if upcoming.item %}
-            <h2 class="patient-quick-title mb-1">{{ upcoming.item.scheduled_date or '-' }} at {{ upcoming.item.scheduled_time or '-' }}</h2>
+            <h2 class="patient-quick-title mb-1">{{ upcoming.item.scheduled_date or '-' }} at {{ upcoming.item.scheduled_time|time_12h }}</h2>
             <p class="mb-1 text-muted">{{ upcoming.item.physician_email or 'Physician not assigned' }}</p>
             <p class="mb-0"><span class="badge patient-status-badge status-{{ (upcoming.item.status or 'unknown')|replace('_', '-')|lower }}">{{ upcoming.item.status|display_label }}</span></p>
           {% else %}

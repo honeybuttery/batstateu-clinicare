@@ -10,7 +10,7 @@
   <div class="card-body">
     <p class="mb-1"><strong>Patient:</strong> {{ visit.patient_name }} ({{ visit.patient_email }})</p>
     <p class="mb-1"><strong>Consultation Type:</strong> {{ visit.consultation_type_name }}</p>
-    <p class="mb-0"><strong>Arrival Time:</strong> {{ visit.arrival_time }}</p>
+    <p class="mb-0"><strong>Arrival Time:</strong> {{ visit.arrival_time|local_dt }}</p>
   </div>
 </div>
 
