@@ -77,6 +77,9 @@ def register_walkin_patient(
 	full_name: str,
 	institutional_email: str,
 	contact_number: str | None,
+	student_course: str | None = None,
+	student_year_level: int | None = None,
+	faculty_staff_department: str | None = None,
 ) -> dict[str, Any]:
 	if patient_category not in {"student", "faculty", "staff"}:
 		return {"ok": False, "message": "Invalid patient category.", "patient_profile_id": None}
@@ -89,6 +92,9 @@ def register_walkin_patient(
 		full_name=full_name.strip(),
 		institutional_email=institutional_email.strip().lower(),
 		contact_number=(contact_number or "").strip() or None,
+		student_course=(student_course or "").strip() or None,
+		student_year_level=student_year_level,
+		faculty_staff_department=(faculty_staff_department or "").strip() or None,
 	)
 
 	if not patient_profile_id:

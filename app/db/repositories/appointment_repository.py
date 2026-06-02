@@ -186,6 +186,9 @@ def create_appointment_request_via_sp(
         )
 
         row = cur.fetchone()
+        while cur.nextset():
+            cur.fetchall()
+
         if row and "appointment_id" in row:
             return int(row["appointment_id"])
 
@@ -288,6 +291,9 @@ def approve_or_adjust_appointment_via_sp(
         )
 
         row = cur.fetchone()
+        while cur.nextset():
+            cur.fetchall()
+
         if row and "appointment_id" in row:
             return int(row["appointment_id"])
 
@@ -309,6 +315,9 @@ def check_in_appointment_via_sp(
         )
 
         row = cur.fetchone()
+        while cur.nextset():
+            cur.fetchall()
+
         if row and "appointment_id" in row:
             return int(row["appointment_id"])
 

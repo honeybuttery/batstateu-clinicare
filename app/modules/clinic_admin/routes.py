@@ -105,7 +105,13 @@ def audit_logs_page():
 	}
 
 	try:
-		result = get_audit_logs_for_clinic_admin(limit=200)
+		result = get_audit_logs_for_clinic_admin(
+			limit=200,
+			showing=filters["showing"],
+			date_range=filters["date"],
+			action=filters["action"],
+			entity=filters["entity"],
+		)
 	except mysql.connector.Error:
 		flash("Database is unavailable. Please try again later.", "danger")
 		result = {"scope": "deidentified", "logs": []}

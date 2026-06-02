@@ -23,6 +23,16 @@ REPORT_CATALOG = [
         "title": "Consultations per Day (Last 30 Days)",
         "description": "Daily consultation count for operational monitoring.",
     },
+    {
+        "key": "patient_service_records",
+        "title": "Patient Service Records",
+        "description": "Unified list of scheduled appointments and walk-in/emergency visits.",
+    },
+    {
+        "key": "patients_with_completed_visits",
+        "title": "Patients with Completed Visits",
+        "description": "Patients who have at least one completed clinic visit.",
+    },
 ]
 
 
@@ -91,6 +101,50 @@ def get_deidentified_report(report_key: str) -> dict[str, Any] | None:
                 WHERE c.created_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                 GROUP BY DATE(c.created_at)
                 ORDER BY consultation_date DESC
+                """
+            )
+        elif report_key == "patient_service_records":
+            cur.execute(
+                """
+                SELECT
+                    pp.full_name AS patient_name,
+                    a.scheduled_date AS service_date,
+                    a.reason AS concern,
+                    'Appointment' AS record_type
+                FROM appointments a
+                JOIN patient_profiles pp
+                    ON pp.patient_profile_id = a.patient_profile_id
+
+                UNION
+
+                SELECT
+                    pp.full_name AS patient_name,
+                    DATE(v.arrival_time) AS service_date,
+                    tr.initial_assessment AS concern,
+                    'Walk-in/Emergency Visit' AS record_type
+                FROM visits v
+                JOIN patient_profiles pp
+                    ON pp.patient_profile_id = v.patient_profile_id
+                LEFT JOIN triage_records tr
+                    ON tr.visit_id = v.visit_id
+                WHERE v.source_appointment_id IS NULL
+                ORDER BY service_date DESC
+                """
+            )
+        elif report_key == "patients_with_completed_visits":
+            cur.execute(
+                """
+                SELECT
+                    pp.patient_profile_id,
+                    pp.full_name,
+                    pp.institutional_email
+                FROM patient_profiles pp
+                WHERE pp.patient_profile_id IN (
+                    SELECT v.patient_profile_id
+                    FROM visits v
+                    WHERE v.visit_status = 'completed'
+                )
+                ORDER BY pp.full_name ASC
                 """
             )
         else:

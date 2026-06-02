@@ -1,5 +1,5 @@
 # System Design
-## BatStateU CliniCare: PHP Project Structure and Page/Module Plan
+## BatStateU CliniCare: Flask Project Structure and Page/Module Plan
 
 This system design follows the approved project scope, final database design, final MySQL schema, and stored procedures/triggers as the source of truth.
 
@@ -10,107 +10,81 @@ This system design follows the approved project scope, final database design, fi
 ```text
 batstateu-clinicare/
 │
-├─ public/
-│  ├─ index.php
-│  ├─ .htaccess
-│  └─ assets/
-│     ├─ css/
-│     ├─ js/
-│     └─ img/
-│
 ├─ app/
-│  ├─ config/
-│  │  ├─ app.php
-│  │  ├─ database.php
-│  │  └─ constants.php
-│  │
-│  ├─ core/
-│  │  ├─ Router.php
-│  │  ├─ Controller.php
-│  │  ├─ View.php
-│  │  ├─ Session.php
-│  │  ├─ Auth.php
-│  │  └─ Authorization.php
-│  │
-│  ├─ helpers/
-│  │  ├─ functions.php
-│  │  └─ validation.php
-│  │
-│  ├─ models/
-│  │  ├─ User.php
-│  │  ├─ PatientProfile.php
-│  │  ├─ Appointment.php
-│  │  ├─ Visit.php
-│  │  ├─ TriageRecord.php
-│  │  ├─ Consultation.php
-│  │  ├─ AuditLog.php
-│  │  └─ Lookup*.php
-│  │
+│  ├─ __init__.py
+│  ├─ config.py
+│  ├─ extensions.py
+│  ├─ auth/
+│  │  ├─ decorators.py
+│  │  ├─ routes.py
+│  │  ├─ services.py
+│  │  └─ navigation.py
+│  ├─ db/
+│  │  ├─ connection.py
+│  │  └─ repositories/
+│  ├─ modules/
+│  │  ├─ patient/
+│  │  ├─ nurse/
+│  │  ├─ physician/
+│  │  ├─ clinic_admin/
+│  │  └─ system_admin/
 │  ├─ services/
-│  │  ├─ AuditService.php
-│  │  └─ VisitWorkflowService.php
-│  │
-│  ├─ controllers/
-│  │  ├─ AuthController.php
-│  │  ├─ PatientController.php
-│  │  ├─ NurseController.php
-│  │  ├─ PhysicianController.php
-│  │  ├─ AdminClinicController.php
-│  │  ├─ AdminSystemController.php
-│  │  ├─ AppointmentController.php
-│  │  ├─ VisitController.php
-│  │  ├─ ConsultationController.php
-│  │  └─ ReportController.php
-│  │
-│  └─ views/
+│  ├─ utils/
+│  ├─ static/
+│  │  ├─ css/
+│  │  ├─ js/
+│  │  └─ img/
+│  └─ templates/
 │     ├─ layouts/
-│     ├─ shared/
+│     ├─ includes/
 │     ├─ auth/
 │     ├─ patient/
 │     ├─ nurse/
 │     ├─ physician/
-│     ├─ admin_clinic/
-│     └─ admin_system/
+│     ├─ clinic_admin/
+│     └─ system_admin/
 │
-├─ storage/
-│  ├─ logs/
-│  └─ uploads/
-│
-└─ vendor/   (if Composer is used)
+├─ database/
+├─ instance/
+├─ logs/
+├─ tests/
+├─ run.py
+├─ requirements.txt
+└─ .env / .env.example
 ```
 
 ---
 
-## 2. Core PHP Files and Their Purpose
+## 2. Core Python/Flask Files and Their Purpose
 
-- `public/index.php` — bootstrap + route dispatch entry point.
-- `app/core/Router.php` — URL-to-controller/action mapping.
-- `app/core/Auth.php` — login state, current `user_id`, role retrieval.
-- `app/core/Authorization.php` — role-based route/action guards.
-- `app/config/database.php` — PDO connection and DB settings.
-- `app/services/VisitWorkflowService.php` — central `visits` workflow operations.
-- `app/services/AuditService.php` — centralized audit calls.
+- `run.py` — local entry point that runs the Flask app.
+- `app/__init__.py` — application factory, blueprint registration.
+- `app/config.py` — environment-based configuration.
+- `app/extensions.py` — shared Flask extensions wiring.
+- `app/auth/routes.py` — login, registration, verification flows.
+- `app/db/connection.py` — MySQL connection + cursor context manager.
+- `app/db/repositories/*` — data access layer per entity.
+- `app/services/visit_workflow_service.py` — visit-centric workflow logic.
 
 ---
 
 ## 3. Shared Files Needed by the System
 
 ### Database Connection
-- `app/config/database.php`
+- `app/db/connection.py`
 
 ### Authentication / Session Handling
-- `app/core/Session.php`
-- `app/core/Auth.php`
+- `app/auth/decorators.py`
+- `app/auth/services.py`
 
 ### Authorization Checks
-- `app/core/Authorization.php`
+- `app/auth/decorators.py`
 
 ### Reusable Layout Files
-- `app/views/layouts/main.php`
-- `app/views/layouts/auth.php`
-- `app/views/shared/topbar.php`
-- `app/views/shared/sidebar.php`
-- `app/views/shared/flash_messages.php`
+- `app/templates/layouts/base.html`
+- `app/templates/includes/topbar.html`
+- `app/templates/includes/sidebar.html`
+- `app/templates/includes/flash_messages.html`
 
 ---
 
@@ -243,12 +217,12 @@ Admin/System Admin opens report filters → view de-identified summaries and aud
 
 ## 9. Recommended Naming Convention for Files and Folders
 
-- Folders: lowercase with underscore (e.g., `admin_system`, `admin_clinic`)
-- Controllers: `PascalCaseController.php`
-- Models: `PascalCase.php`
-- Views: lowercase snake_case per action (e.g., `appointment_review.php`)
+- Folders: lowercase with underscore (e.g., `clinic_admin`, `system_admin`)
+- Modules: `routes.py` per role under `app/modules/<role>/`
+- Repositories: `snake_case_repository.py` (e.g., `appointment_repository.py`)
+- Services: `snake_case_service.py` (e.g., `visit_workflow_service.py`)
+- Templates: lowercase snake_case per action (e.g., `appointment_review.html`)
 - Routes: resource-based and action-clear (e.g., `/appointments/request`, `/visits/create-from-appointment`)
-- Services: workflow-oriented names (`VisitWorkflowService`)
 
 ---
 

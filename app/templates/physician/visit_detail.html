@@ -27,7 +27,7 @@
       <div class="card-body">
         <h2 class="h6">Visit + Triage</h2>
         <p class="mb-1"><strong>Type:</strong> {{ visit.consultation_type_name }}</p>
-        <p class="mb-1"><strong>Arrival:</strong> {{ visit.arrival_time }}</p>
+        <p class="mb-1"><strong>Arrival:</strong> {{ visit.arrival_time|local_dt }}</p>
         <p class="mb-1"><strong>Status:</strong> <span class="badge text-bg-info">{{ visit.visit_status }}</span></p>
         <p class="mb-1"><strong>Triage Level:</strong> {{ visit.triage_level_name or '-' }}</p>
         <hr>

@@ -31,7 +31,7 @@
                   <div>{{ appt.patient_name }}</div>
                   <small class="text-muted">{{ appt.patient_email }}</small>
                 </td>
-                <td>{{ appt.scheduled_date or '-' }} {{ appt.scheduled_time or '' }}</td>
+                <td>{{ appt.scheduled_date or '-' }} {{ appt.scheduled_time|time_12h }}</td>
                 <td>{{ appt.physician_email }}</td>
                 <td>{{ appt.consultation_type_name }}</td>
                 <td class="text-end">

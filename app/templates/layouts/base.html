@@ -31,12 +31,13 @@
         {% include 'includes/flash_messages.html' %}
       {% endif %}
       <div class="row g-4">
-        {% if session.get('user_id') %}
+        {% set show_sidebar = session.get('user_id') and not hide_sidebar|default(false) %}
+        {% if show_sidebar %}
           <aside class="col-lg-3">
             {% include 'includes/sidebar.html' %}
           </aside>
         {% endif %}
-        <section class="{{ 'col-lg-9' if session.get('user_id') else 'col-12' }}">
+        <section class="{{ 'col-lg-9' if show_sidebar else 'col-12' }}">
   {% endif %}
 
   {% block content %}{% endblock %}

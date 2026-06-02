@@ -8,7 +8,7 @@
         <h1 class="h4 mb-1 role-page-title role-page-title-patient">Request Appointment</h1>
         <p class="text-muted role-page-description mb-0">Submit a new consultation request by selecting your preferred physician and schedule.</p>
 
-        <form method="post" action="{{ url_for('patient.appointment_request_submit') }}">
+        <form id="appointment-request-form" method="post" action="{{ url_for('patient.appointment_request_submit') }}">
           <div class="mb-3">
             <label for="physician_user_id" class="form-label">Physician</label>
             <select class="form-select" id="physician_user_id" name="physician_user_id" required>
@@ -36,7 +36,8 @@
             </div>
             <div class="col-md-6 mb-3">
               <label for="scheduled_time" class="form-label">Preferred Time (optional)</label>
-              <input type="time" class="form-control" id="scheduled_time" name="scheduled_time">
+              <input type="time" class="form-control" id="scheduled_time" name="scheduled_time" min="08:00" max="16:59">
+              <div class="form-text">Clinic hours: Mon - Fri | 8:00 AM - 5:00 PM</div>
             </div>
           </div>
 

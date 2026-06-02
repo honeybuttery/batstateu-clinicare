@@ -1,4 +1,5 @@
 {% set hide_topbar = true %}
+{% set hide_sidebar = true %}
 {% set body_class = 'auth-login-body' %}
 {% set suppress_global_flash = true %}
 {% extends 'layouts/base.html' %}
@@ -85,6 +86,31 @@
             <i class="bi bi-person-fill" aria-hidden="true"></i>
             <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter your full name" autocomplete="name" required>
           </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="patient_category" class="form-label">Category</label>
+          <select class="form-select" id="patient_category" name="patient_category" required>
+            <option value="student">Student</option>
+            <option value="faculty">Faculty</option>
+            <option value="staff">Staff</option>
+          </select>
+          <small class="text-muted">Select the category that matches your university affiliation.</small>
+        </div>
+
+        <div class="mb-3">
+          <label for="student_course" class="form-label">Student Course (if student)</label>
+          <input type="text" class="form-control" id="student_course" name="student_course" placeholder="e.g., BSIT">
+        </div>
+
+        <div class="mb-3">
+          <label for="student_year_level" class="form-label">Student Year Level (if student)</label>
+          <input type="number" class="form-control" id="student_year_level" name="student_year_level" min="1" max="6" placeholder="e.g., 3">
+        </div>
+
+        <div class="mb-3">
+          <label for="faculty_staff_department" class="form-label">Faculty/Staff Department (if faculty/staff)</label>
+          <input type="text" class="form-control" id="faculty_staff_department" name="faculty_staff_department" placeholder="e.g., Registrar Office">
         </div>
 
         <div class="mb-3">

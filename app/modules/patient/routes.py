@@ -14,6 +14,7 @@ from app.services.appointment_service import (
 	get_patient_appointments,
 )
 from app.services.patient_record_service import get_patient_medical_records_for_user, update_patient_profile_for_user
+from app.utils.clinic_schedule import validate_clinic_schedule
 
 bp = Blueprint("patient", __name__)
 
@@ -22,6 +23,14 @@ bp = Blueprint("patient", __name__)
 def home() -> str:
 	"""Render starter home page."""
 	return render_template("home/index.html", page_title="Home")
+
+
+@bp.get("/patient/dashboard")
+@login_required
+@role_required("patient_user")
+def dashboard_page():
+	"""Redirect to the patient landing page."""
+	return redirect(url_for("patient.appointments_list"))
 
 
 @bp.get("/patient/appointments")
@@ -83,6 +92,11 @@ def appointment_request_submit():
 	scheduled_time = request.form.get("scheduled_time") or None
 	reason = (request.form.get("reason") or "").strip() or None
 	ip_address = request.remote_addr or "127.0.0.1"
+
+	is_schedule_ok, schedule_message = validate_clinic_schedule(scheduled_date, scheduled_time)
+	if not is_schedule_ok:
+		flash(schedule_message, "danger")
+		return redirect(url_for("patient.appointment_request_page"))
 
 	if not physician_user_id or not consultation_type_id:
 		flash("Please select a physician and consultation type.", "danger")
@@ -214,6 +228,9 @@ def edit_profile_submit():
 	allergies = (request.form.get("allergies") or "").strip() or None
 	known_conditions = (request.form.get("known_conditions") or "").strip() or None
 	current_medications = (request.form.get("current_medications") or "").strip() or None
+	student_course = (request.form.get("student_course") or "").strip() or None
+	student_year_level = request.form.get("student_year_level", type=int)
+	faculty_staff_department = (request.form.get("faculty_staff_department") or "").strip() or None
 	ip_address = request.remote_addr or "127.0.0.1"
 
 	try:
@@ -224,6 +241,9 @@ def edit_profile_submit():
 			allergies=allergies,
 			known_conditions=known_conditions,
 			current_medications=current_medications,
+			student_course=student_course,
+			student_year_level=student_year_level,
+			faculty_staff_department=faculty_staff_department,
 		)
 	except mysql.connector.Error:
 		flash("Database is unavailable. Please try again later.", "danger")

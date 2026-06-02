@@ -24,6 +24,9 @@ def create_visit_from_checked_in_appointment_via_sp(
         )
 
         row = cur.fetchone()
+        while cur.nextset():
+            cur.fetchall()
+
         if row and "visit_id" in row:
             return int(row["visit_id"])
 
@@ -132,6 +135,9 @@ def create_walkin_or_emergency_visit_via_sp(
         )
 
         row = cur.fetchone()
+        while cur.nextset():
+            cur.fetchall()
+
         if row and "visit_id" in row:
             return int(row["visit_id"])
 

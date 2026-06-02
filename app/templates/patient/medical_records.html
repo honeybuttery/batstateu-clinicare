@@ -24,6 +24,15 @@
           <div class="col-md-4"><strong>Contact:</strong> {{ patient.contact_number or '-' }}</div>
           <div class="col-md-4"><strong>Allergies:</strong> {{ patient.allergies or '-' }}</div>
           <div class="col-md-4"><strong>Conditions:</strong> {{ patient.known_conditions or '-' }}</div>
+          {% if patient.student_course %}
+            <div class="col-md-4"><strong>Student Course:</strong> {{ patient.student_course }}</div>
+          {% endif %}
+          {% if patient.student_year_level %}
+            <div class="col-md-4"><strong>Student Year Level:</strong> {{ patient.student_year_level }}</div>
+          {% endif %}
+          {% if patient.faculty_staff_department %}
+            <div class="col-md-4"><strong>Faculty/Staff Dept:</strong> {{ patient.faculty_staff_department }}</div>
+          {% endif %}
           <div class="col-12"><strong>Current Medications:</strong> {{ patient.current_medications or '-' }}</div>
         </div>
       </div>
@@ -46,7 +55,7 @@
             <div class="accordion-item">
               <h2 class="accordion-header" id="recordHeading{{ rec.consultation_id }}">
                 <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#recordCollapse{{ rec.consultation_id }}" aria-expanded="{{ 'true' if loop.first else 'false' }}">
-                  {{ rec.arrival_time or '-' }} - {{ rec.consultation_type_name or 'Consultation' }} ({{ rec.triage_level_name or 'No triage level' }})
+                  {{ rec.arrival_time|local_dt }} - {{ rec.consultation_type_name or 'Consultation' }} ({{ rec.triage_level_name or 'No triage level' }})
                 </button>
               </h2>
               <div id="recordCollapse{{ rec.consultation_id }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}" data-bs-parent="#recordsAccordion">

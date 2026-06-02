@@ -29,6 +29,14 @@ from app.services.system_settings_service import (
 bp = Blueprint("system_admin", __name__)
 
 
+@bp.get("/system-admin/dashboard")
+@login_required
+@role_required("system_admin")
+def dashboard_page():
+	"""Redirect to the system admin landing page."""
+	return redirect(url_for("system_admin.users_list_page"))
+
+
 @bp.get("/system-admin/users")
 @login_required
 @role_required("system_admin")

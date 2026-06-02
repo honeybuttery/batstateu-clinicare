@@ -6,11 +6,11 @@ from flask import session, url_for
 
 
 ROLE_HOME_ENDPOINTS: dict[str, str] = {
-    "patient_user": "patient.appointments_list",
-    "clinic_nurse": "nurse.appointments_review",
-    "physician": "physician.queue_page",
+    "patient_user": "patient.dashboard_page",
+    "clinic_nurse": "nurse.dashboard_page",
+    "physician": "physician.dashboard_page",
     "clinic_admin": "clinic_admin.dashboard_page",
-    "system_admin": "system_admin.users_list_page",
+    "system_admin": "system_admin.dashboard_page",
 }
 
 

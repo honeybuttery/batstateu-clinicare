@@ -55,10 +55,10 @@ password_hash = VALUES(password_hash),
 role_id = VALUES(role_id),
 account_status = VALUES(account_status);
 
-INSERT INTO email_verifications (verification_id, user_id, token, expires_at, verified_at)
-VALUES (1, 10, 'demo-verify-token-001', DATE_ADD(UTC_TIMESTAMP(), INTERVAL 24 HOUR), NULL)
+INSERT INTO email_verifications (verification_id, user_id, otp_code, expires_at, verified_at)
+VALUES (1, 10, '123456', DATE_ADD(UTC_TIMESTAMP(), INTERVAL 24 HOUR), NULL)
 ON DUPLICATE KEY UPDATE
-token = VALUES(token),
+otp_code = VALUES(otp_code),
 expires_at = VALUES(expires_at),
 verified_at = VALUES(verified_at);
 */

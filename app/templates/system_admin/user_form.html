@@ -10,7 +10,7 @@
       <div class="col-md-3"><label class="form-label">Role</label><select class="form-select" name="role_id" required>{% for role in roles %}<option value="{{ role.role_id }}" {% if user and role.role_id == user.role_id %}selected{% endif %}>{{ role.role_name|display_label }}</option>{% endfor %}</select></div>
       <div class="col-md-3"><label class="form-label">Status</label><select class="form-select" name="account_status"><option value="pending_verification" {% if user and user.account_status == 'pending_verification' %}selected{% endif %}>{{ 'pending_verification'|display_label }}</option><option value="active" {% if user and user.account_status == 'active' %}selected{% endif %}>{{ 'active'|display_label }}</option><option value="inactive" {% if user and user.account_status == 'inactive' %}selected{% endif %}>{{ 'inactive'|display_label }}</option></select></div>
       <div class="col-md-6"><label class="form-label">Password {% if user %}(leave blank to keep current){% endif %}</label><input type="password" class="form-control" name="password" {% if not user %}required{% endif %}></div>
-      <div class="col-12"><a class="btn btn-outline-secondary" href="{{ url_for('system_admin.users_list_page') }}">Cancel</a><button class="btn btn-primary" type="submit">Save User</button></div>
+      <div class="col-12"><a class="btn btn-outline-secondary me-2" href="{{ url_for('system_admin.users_list_page') }}">Cancel</a><button class="btn btn-primary" type="submit">Save User</button></div>
     </form>
   </div>
 </div>

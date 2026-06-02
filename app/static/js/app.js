@@ -164,4 +164,135 @@ document.addEventListener("DOMContentLoaded", () => {
 			const interval = setInterval(updateButton, 1000);
 		});
 	}
+
+	const appointmentForm = document.getElementById("appointment-request-form");
+	if (appointmentForm) {
+		const dateInput = appointmentForm.querySelector("#scheduled_date");
+		const timeInput = appointmentForm.querySelector("#scheduled_time");
+		const clearDateValidity = () => {
+			if (dateInput) {
+				dateInput.setCustomValidity("");
+			}
+		};
+
+		if (dateInput) {
+			dateInput.addEventListener("input", clearDateValidity);
+			dateInput.addEventListener("change", clearDateValidity);
+		}
+
+		appointmentForm.addEventListener("submit", (event) => {
+			if (!dateInput || !timeInput) {
+				return;
+			}
+
+			const dateValue = dateInput.value;
+			const timeValue = timeInput.value;
+
+			if (!dateValue && !timeValue) {
+				return;
+			}
+
+			if (!dateValue || !timeValue) {
+				event.preventDefault();
+				dateInput.setCustomValidity("Please provide both a preferred date and time.");
+				dateInput.reportValidity();
+				return;
+			}
+
+			const dateParts = dateValue.split("-");
+			if (dateParts.length !== 3) {
+				event.preventDefault();
+				dateInput.setCustomValidity("Preferred date is invalid.");
+				dateInput.reportValidity();
+				return;
+			}
+
+			const scheduleDate = new Date(`${dateValue}T00:00:00`);
+			const day = scheduleDate.getDay();
+			if (day === 0 || day === 6) {
+				event.preventDefault();
+				dateInput.setCustomValidity("Clinic is closed on weekends. Please select a weekday.");
+				dateInput.reportValidity();
+				return;
+			}
+
+			const timeParts = timeValue.split(":");
+			const hour = parseInt(timeParts[0] || "0", 10);
+			const minute = parseInt(timeParts[1] || "0", 10);
+			if (Number.isNaN(hour) || Number.isNaN(minute)) {
+				event.preventDefault();
+				dateInput.setCustomValidity("Preferred time is invalid.");
+				dateInput.reportValidity();
+				return;
+			}
+
+			const minutesSinceMidnight = hour * 60 + minute;
+			const openMinutes = 8 * 60;
+			const closeMinutes = 17 * 60;
+			if (minutesSinceMidnight < openMinutes || minutesSinceMidnight >= closeMinutes) {
+				event.preventDefault();
+				dateInput.setCustomValidity("Clinic hours are Mon - Fri, 8:00 AM to 5:00 PM.");
+				dateInput.reportValidity();
+				return;
+			}
+
+			dateInput.setCustomValidity("");
+		});
+	}
+
+		const landingNav = document.querySelector(".clinic-landing-header");
+		if (landingNav) {
+			const navLinks = Array.from(landingNav.querySelectorAll('.nav-link[href^="#"]'));
+			const navTargets = navLinks
+				.map((link) => {
+					const href = link.getAttribute("href");
+					if (!href || href.length <= 1) {
+						return null;
+					}
+					const target = document.querySelector(href);
+					return target ? { link, target } : null;
+				})
+				.filter(Boolean);
+
+			if (navTargets.length > 0) {
+				const setActiveLink = (activeLink) => {
+					navLinks.forEach((link) => link.classList.toggle("active", link === activeLink));
+				};
+				let manualActiveLink = null;
+				let manualActiveUntil = 0;
+
+				const updateActiveLink = () => {
+					if (manualActiveLink && Date.now() < manualActiveUntil) {
+						setActiveLink(manualActiveLink);
+						return;
+					}
+					manualActiveLink = null;
+					const headerOffset = landingNav.offsetHeight + 16;
+					let current = navTargets[0].link;
+
+					for (const { link, target } of navTargets) {
+						const top = target.getBoundingClientRect().top - headerOffset;
+						if (top <= 0) {
+							current = link;
+						} else {
+							break;
+						}
+					}
+
+					setActiveLink(current);
+				};
+
+				navLinks.forEach((link) => {
+					link.addEventListener("click", () => {
+						manualActiveLink = link;
+						manualActiveUntil = Date.now() + 900;
+						setActiveLink(link);
+					});
+				});
+
+				updateActiveLink();
+				window.addEventListener("scroll", updateActiveLink, { passive: true });
+				window.addEventListener("resize", updateActiveLink);
+			}
+		}
 });

@@ -1,7 +1,7 @@
 # Implementation Notes
 ## BatStateU CliniCare - Current Flask + MySQL Implementation Status
 
-This file was updated to reflect the current Python Flask codebase (not the old PHP starter scaffold).
+This file reflects the current Python Flask codebase (not the old starter scaffold).
 
 ---
 
